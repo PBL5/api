@@ -1,1 +1,3 @@
 djangorestframework
+drf_yasg
+psycopg2
