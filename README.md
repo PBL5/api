@@ -7,4 +7,3 @@ If you're using Linux, please install some packages using your package managemen
 * `cd django`
 * `python manage.py migrate`
 * `python manage.py runserver`
-* `python manage.py startapp studentAPI`
