@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class StudentapiConfig(AppConfig):
-    name = 'studentAPI'
+    name = 'api'

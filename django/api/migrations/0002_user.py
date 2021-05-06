@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('studentAPI', '0001_initial'),
+        ('api', '0001_initial'),
     ]
 
     operations = [
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=50)),
                 ('email', models.CharField(max_length=50)),
                 ('password', models.CharField(max_length=20)),
-                ('usertype', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='studentAPI.usertype')),
+                ('usertype', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='api.usertype')),
             ],
         ),
     ]
