@@ -16,7 +16,14 @@ class Migration(migrations.Migration):
             name='UserType',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=20)),
+                ('user_type_name', models.CharField(max_length=20)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='subject',
+            fields=[
+                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('subject_name', models.CharField(max_length=50)),
             ],
         ),
     ]
