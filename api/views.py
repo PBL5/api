@@ -5,8 +5,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import UserType, User, Subject, Date, DateClass, Class, DetailStudentAttendClass, StudentAttending
-from .serializer import UserTypeSerializer, UserSerializer, SubjectSerializer, ClassSerializer, DateSerializer, DateClassSerializer
+from .models import UserType, User, Subject, DateClass, Class, DetailStudentAttendClass, StudentAttending
+from .serializer import UserTypeSerializer, UserSerializer, SubjectSerializer, ClassSerializer, DateClassSerializer
 from rest_framework.views import APIView
 
 from drf_yasg.utils import swagger_auto_schema
@@ -122,23 +122,6 @@ class ClasssAPIView(generics.GenericAPIView):
         serializer = ClassSerializer(new_class)
         return Response(serializer.data)
 
-
-class DateAPIView(generics.GenericAPIView):
-    serializer_class = DateSerializer
-    throttle_scope = "dates_app"
-
-    def get(self, request):
-        dates = Date.objects.all()
-        serializer = DateSerializer(dates, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, *args, **kwargs):
-        date_data = request.data
-        id = uuid.uuid4()
-        new_date = Date.objects.create(id=id, date=date_data["date"])
-        new_date.save()
-        serializer = DateSerializer(new_date)
-        return Response(serializer.data)
 
         
 class DateClassAPIView(generics.GenericAPIView):

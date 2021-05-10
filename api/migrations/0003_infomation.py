@@ -13,9 +13,9 @@ class Migration(migrations.Migration):
     operations = [
         migrations.CreateModel(
             name='class',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=50)),
+            fields=[ 
+                ('id', models.AutoField(primary_key=True, null=False, editable=False, unique=True)),
+                ('class_name', models.CharField(max_length=50)),
                 ('subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.subject')),
                 ('teacher', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.user'))
             ],
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='date_class',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True, null=False, editable=False, unique=True)),
                 ('class', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.class')),
                 ('date', models.DateTimeField()),
                 ('is_checking', models.BooleanField(default=False)),
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='student_attending',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True, null=False, editable=False, unique=True)),
                 ('is_attending', models.BooleanField()),
                 ('dateClass',
                  models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='api.date_class')),
@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='detail_student_attend_class',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True, null=False, editable=False, unique=True)),
                 ('class', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='api.class')),
                 ('student', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='api.user')),
             ],

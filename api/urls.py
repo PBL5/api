@@ -35,7 +35,6 @@ urlpatterns = [
 
     path('subjects', views.SubjectsAPIView.as_view()),
     path('classes', views.ClasssAPIView.as_view()),
-    path('dates', views.DateAPIView.as_view()),
     path('date-classes', views.DateClassAPIView.as_view()),
 
     path('doc', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

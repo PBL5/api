@@ -13,17 +13,17 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='UserType',
+            name='user_type',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('id', models.AutoField(primary_key=True,
+                 null=False, editable=False, unique=True)),
                 ('user_type_name', models.CharField(max_length=20)),
             ],
         ),
         migrations.CreateModel(
             name='subject',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('subject_name', models.CharField(max_length=50)),
-            ],
+            fields=[('id', models.AutoField(primary_key=True, null=False, editable=False, unique=True)),
+                    ('subject_name', models.CharField(max_length=50)),
+                    ],
         ),
     ]

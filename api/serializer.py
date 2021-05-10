@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import UserType, User, Subject, Date, DateClass, Class, DetailStudentAttendClass, StudentAttending
+from .models import UserType, User, Subject, DateClass, Class, DetailStudentAttendClass, StudentAttending
 
 
 class UserTypeSerializer(serializers.ModelSerializer):
@@ -49,14 +49,6 @@ class ClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Class
         fields = ('name', 'subject', 'teacher')
-
-
-class DateSerializer(serializers.ModelSerializer):
-    date = serializers.DateTimeField()
-
-    class Meta:
-        model = Date
-        fields = ('__all__')
 
 
 class DateClassSerializer(serializers.ModelSerializer):
