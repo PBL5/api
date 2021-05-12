@@ -5,28 +5,29 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import UserType, User, Subject, Date, DateClass, Class, DetailStudentAttendClass, StudentAttending
-from .serializer import UserTypeSerializer, UserSerializer, SubjectSerializer, ClassSerializer, DateSerializer, DateClassSerializer
+from .models import User_Types, Users, Subject, DateClass, Class, DetailStudentAttendClass, StudentAttending
+from .serializer import UserTypeSerializer, UserSerializer, SubjectSerializer, ClassSerializer, DateClassSerializer
 from rest_framework.views import APIView
 
-from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.utils import get_serializer_class, swagger_auto_schema
 from drf_yasg import openapi
 
 import uuid
+import json
 
 class UserTypesAPIView(generics.GenericAPIView):
     serializer_class = UserTypeSerializer
     throttle_scope = "userTypes_app"
 
     def get(self, request):
-        userTypes = UserType.objects.all()
+        userTypes = User_Types.objects.all()
         serializer = UserTypeSerializer(userTypes, many=True)
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         userType_data = request.data
 
-        new_userType = UserType.objects.create(id=userType_data["id"], name=userType_data["name"])
+        new_userType = User_Types.objects.create(id=userType_data["id"], name=userType_data["name"])
 
         new_userType.save()
 
@@ -39,7 +40,7 @@ class UserAPIView(generics.GenericAPIView):
     throttle_scope = "users_app"
 
     def get(self, request):
-        users = User.objects.all()
+        users = Users.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
@@ -48,38 +49,38 @@ class UserGetAPIView(generics.GenericAPIView):
     @swagger_auto_schema(manual_parameters=[get_byID_param])
     def get(self, request):
         id = request.query_params["id"]
-        user = User.objects.get(id=id)
+        user = Users.objects.get(id=id)
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
 class LoginAPIView(generics.GenericAPIView):
+    serializer_class = UserSerializer
     email_param = openapi.Parameter('email', in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
     password_param = openapi.Parameter('password', in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
 
     @swagger_auto_schema(manual_parameters=[email_param, password_param])
-    def post(self, request, *args, **kwargs):
-
-        email = request.query_params["email"]
-        password = request.query_params["password"]
+    def post(self, request):
+        email = request.data["email"]
+        password = request.data["password"]
         try:
-            user = User.objects.get(email=email)
+            user = Users.objects.get(email=email)
 
             if user.password == password:
                 serializer = UserSerializer(user)
                 return Response(serializer.data)
             else:
-                return HttpResponse('Password incorrect.', status=404)
+                return HttpResponse('Password incorrect.', status=401)
         except ObjectDoesNotExist:
-                return HttpResponse("User doesn't exist", status=404)
+                return HttpResponse("User doesn't exist", status=401)
 
 class SignUpAPIView(generics.GenericAPIView):
     serializer_class = UserSerializer
     throttle_scope = "users_app"
     def post(self, request, *args, **kwargs):
         user_data = request.data
-        user_type = UserType.objects.get(name=user_data["usertype"])
-        id = User.objects.latest('id').id + 1
-        new_user = User.objects.create(id=id, name=user_data["name"], email=user_data["email"], usertype=user_type, password=user_data["password"])
+        user_type = User_Types.objects.get(name=user_data["usertype"])
+        id = Users.objects.latest('id').id + 1
+        new_user = Users.objects.create(id=id, name=user_data["name"], email=user_data["email"], usertype=user_type, password=user_data["password"])
         new_user.save()
 
         serializer = UserSerializer(new_user)
@@ -116,29 +117,12 @@ class ClasssAPIView(generics.GenericAPIView):
         class_data = request.data
         id = Class.objects.latest('id').id + 1
         subject = Subject.objects.get(id=class_data["subject"])
-        teacher = User.objects.get(id=class_data["teacher"])
+        teacher = Users.objects.get(id=class_data["teacher"])
         new_class = Class.objects.create(id=id, name=class_data["name"], subject = subject, teacher = teacher)
         new_class.save()
         serializer = ClassSerializer(new_class)
         return Response(serializer.data)
 
-
-class DateAPIView(generics.GenericAPIView):
-    serializer_class = DateSerializer
-    throttle_scope = "dates_app"
-
-    def get(self, request):
-        dates = Date.objects.all()
-        serializer = DateSerializer(dates, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, *args, **kwargs):
-        date_data = request.data
-        id = uuid.uuid4()
-        new_date = Date.objects.create(id=id, date=date_data["date"])
-        new_date.save()
-        serializer = DateSerializer(new_date)
-        return Response(serializer.data)
 
         
 class DateClassAPIView(generics.GenericAPIView):

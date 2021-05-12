@@ -1,26 +1,26 @@
 from rest_framework import serializers
 
-from .models import UserType, User, Subject, Date, DateClass, Class, DetailStudentAttendClass, StudentAttending
+from .models import User_Types, Users, Subject, DateClass, Class, DetailStudentAttendClass, StudentAttending
 
 
 class UserTypeSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField()
-    name = serializers.CharField(max_length=20)
+    user_type_id = serializers.IntegerField()
+    user_type_name = serializers.CharField(max_length=20)
 
     class Meta:
-        model = UserType
-        fields = ('id', 'name')
+        model = User_Types
+        fields = ('user_type_id', 'user_type_name')
 
 
 class UserSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(max_length=50)
+    full_name = serializers.CharField(max_length=50)
     email = serializers.CharField(max_length=50)
     password = serializers.CharField(max_length=20)
-    usertype = serializers.CharField(max_length=50)
+    user_type = serializers.CharField(max_length=50)
 
     class Meta:
-        model = User
-        fields = ('name', 'email', 'usertype', 'password')
+        model = Users
+        fields = ('full_name', 'email', 'user_type', 'password')
 
 
 class LoginSerializer(serializers.ModelSerializer):
@@ -28,7 +28,7 @@ class LoginSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=50)
 
     class Meta:
-        model = User
+        model = Users
         fields = ('email', 'password')
 
 
@@ -49,14 +49,6 @@ class ClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Class
         fields = ('name', 'subject', 'teacher')
-
-
-class DateSerializer(serializers.ModelSerializer):
-    date = serializers.DateTimeField()
-
-    class Meta:
-        model = Date
-        fields = ('__all__')
 
 
 class DateClassSerializer(serializers.ModelSerializer):

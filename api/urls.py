@@ -31,11 +31,10 @@ urlpatterns = [
     path('users', views.UserAPIView.as_view()),
     path('users/by-id', views.UserGetAPIView.as_view()),
     path('users/sign-up', views.SignUpAPIView.as_view()),
-    path('users/log-in', views.LoginAPIView.as_view()),
+    path('login', views.LoginAPIView.as_view()),
 
     path('subjects', views.SubjectsAPIView.as_view()),
     path('classes', views.ClasssAPIView.as_view()),
-    path('dates', views.DateAPIView.as_view()),
     path('date-classes', views.DateClassAPIView.as_view()),
 
     path('doc', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
