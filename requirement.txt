@@ -1,4 +1,4 @@
 djangorestframework
 drf_yasg
 psycopg2
-corsheaders
+django-cors-headers
