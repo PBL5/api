@@ -53,6 +53,18 @@ values
 ('Lập trình Java'),
 ('Khoa học dữ liệu')
 
---insert into api_class (class_name, subject_id, teacher_id)
---values
---('18N15',)
+insert into api_classes (subject_id, teacher_id)
+values
+(1, 1),
+(2, 1),
+(3, 2)
+
+insert into api_details_student_attend_class (student_id, class_id) 
+values
+(1, 1),
+(1, 2),
+(1, 3),
+(2, 1),
+(2, 2),
+(3, 3);
+
