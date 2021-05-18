@@ -8,7 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from .models import Classes, Users
-from .serializer import ClassSerializer, StudentSerializer, UserSerializer
+from .serializer import ClassSerializer, LoginSerializer, StudentSerializer, UserSerializer
 
 
 class StudentAPIView(generics.GenericAPIView):
@@ -36,7 +36,7 @@ class LoginAPIView(generics.GenericAPIView):
                                        in_=openapi.IN_QUERY,
                                        type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(manual_parameters=[email_param, password_param])
+    @swagger_auto_schema(request_body=LoginSerializer)
     def post(self, request):
         email = request.data["email"]
         password = request.data["password"]

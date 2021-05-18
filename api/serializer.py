@@ -3,6 +3,11 @@ from rest_framework import serializers
 from .models import Classes, Subjects, Users
 
 
+class LoginSerializer(serializers.Serializer):
+    email = serializers.CharField(max_length=255)
+    password = serializers.CharField(max_length=125)
+
+
 class StudentSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(max_length=50)
     email = serializers.CharField(max_length=50)
