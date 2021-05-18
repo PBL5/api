@@ -1,10 +1,11 @@
 from django.db import models
-import uuid
 
 
 class User_Types(models.Model):
-    user_type_id = models.AutoField(
-        primary_key=True, null=False, editable=False, unique=True)
+    user_type_id = models.AutoField(primary_key=True,
+                                    null=False,
+                                    editable=False,
+                                    unique=True)
     user_type_name = models.CharField(max_length=20)
 
     def __str__(self):
@@ -12,58 +13,83 @@ class User_Types(models.Model):
 
 
 class Users(models.Model):
-    user_id = models.IntegerField(primary_key=True)
+    user_id = models.AutoField(primary_key=True,
+                               null=False,
+                               editable=False,
+                               unique=True)
     full_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
     password = models.CharField(max_length=20)
-    user_type = models.ForeignKey(
-        User_Types, on_delete=models.CASCADE, null=True)
+    user_type = models.ForeignKey(User_Types,
+                                  on_delete=models.CASCADE,
+                                  null=True)
 
     def __str__(self):
-        return self.name
+        return self.full_name
 
 
-class Subject(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+class Subjects(models.Model):
+    subject_id = models.AutoField(primary_key=True,
+                                  null=False,
+                                  editable=False,
+                                  unique=True)
     subject_name = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.name
+        return self.subject_name
 
 
-class Class(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    class_name = models.CharField(max_length=50)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null=True)
-    teacher = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)
+class Classes(models.Model):
+    class_id = models.AutoField(primary_key=True,
+                                null=False,
+                                editable=False,
+                                unique=True)
+    subject = models.ForeignKey(Subjects,
+                                on_delete=models.CASCADE,
+                                null=True,
+                                blank=True)
+    teacher = models.ForeignKey(Users,
+                                on_delete=models.CASCADE,
+                                null=True,
+                                blank=True)
 
     def __str__(self):
-        return self.name
+        return self.subject.subject_name
 
 
 class DateClass(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True,
+                          null=False,
+                          editable=False,
+                          unique=True)
     date = models.DateTimeField()
-    Class = models.ForeignKey(Class, on_delete=models.CASCADE, null=True)
+    Class = models.ForeignKey(Classes, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.date
 
 
 class DetailStudentAttendClass(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True,
+                          null=False,
+                          editable=False,
+                          unique=True)
     student = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)
-    Class = models.ForeignKey(Class, on_delete=models.CASCADE, null=True)
+    Class = models.ForeignKey(Classes, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.student
+        return self.student.full_name
 
 
 class StudentAttending(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True,
+                          null=False,
+                          editable=False,
+                          unique=True)
     isAttending = models.BooleanField()
-    dateClass = models.ForeignKey(
-        DateClass, on_delete=models.CASCADE, null=True)
+    dateClass = models.ForeignKey(DateClass,
+                                  on_delete=models.CASCADE,
+                                  null=True)
     student = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)
 
     def __str__(self):

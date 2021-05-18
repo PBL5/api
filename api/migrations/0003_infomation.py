@@ -2,7 +2,6 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import uuid
 
 
 class Migration(migrations.Migration):
@@ -12,40 +11,71 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='class',
-            fields=[ 
-                ('id', models.AutoField(primary_key=True, null=False, editable=False, unique=True)),
-                ('class_name', models.CharField(max_length=50)),
-                ('subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.subject')),
-                ('teacher', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.user'))
+            name='classes',
+            fields=[
+                ('class_id',
+                 models.AutoField(primary_key=True,
+                                  null=False,
+                                  editable=False,
+                                  unique=True)),
+                ('subject',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                   to='api.subjects')),
+                ('teacher',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                   to='api.users'))
             ],
         ),
         migrations.CreateModel(
-            name='date_class',
+            name='dates_of_class',
             fields=[
-                ('id', models.AutoField(primary_key=True, null=False, editable=False, unique=True)),
-                ('class', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.class')),
+                ('date_class_id',
+                 models.AutoField(primary_key=True,
+                                  null=False,
+                                  editable=False,
+                                  unique=True)),
+                ('class',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                   to='api.classes')),
                 ('date', models.DateTimeField()),
                 ('is_checking', models.BooleanField(default=False)),
             ],
         ),
-
         migrations.CreateModel(
-            name='student_attending',
+            name='student_attendances',
             fields=[
-                ('id', models.AutoField(primary_key=True, null=False, editable=False, unique=True)),
+                ('student_attendance_id',
+                 models.AutoField(primary_key=True,
+                                  null=False,
+                                  editable=False,
+                                  unique=True)),
                 ('is_attending', models.BooleanField()),
-                ('dateClass',
-                 models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='api.date_class')),
-                ('student', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='api.user')),
+                ('date_class',
+                 models.ForeignKey(null=True,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   to='api.dates_of_class')),
+                ('student',
+                 models.ForeignKey(null=True,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   to='api.users')),
             ],
         ),
         migrations.CreateModel(
-            name='detail_student_attend_class',
+            name='details_student_attend_class',
             fields=[
-                ('id', models.AutoField(primary_key=True, null=False, editable=False, unique=True)),
-                ('class', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='api.class')),
-                ('student', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='api.user')),
+                ('detail_student_class_id',
+                 models.AutoField(primary_key=True,
+                                  null=False,
+                                  editable=False,
+                                  unique=True)),
+                ('class',
+                 models.ForeignKey(null=True,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   to='api.classes')),
+                ('student',
+                 models.ForeignKey(null=True,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   to='api.users')),
             ],
         )
     ]
