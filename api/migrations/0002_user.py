@@ -17,13 +17,15 @@ class Migration(migrations.Migration):
                                   null=False,
                                   editable=False,
                                   unique=True)),
-                ('full_name', models.CharField(max_length=50)),
-                ('email', models.CharField(max_length=50)),
-                ('password', models.CharField(max_length=20)),
+                ('full_name', models.CharField(max_length=255)),
+                ('email', models.CharField(max_length=255)),
+                ('password', models.CharField(max_length=255)),
                 ('user_type',
                  models.ForeignKey(null=True,
                                    on_delete=django.db.models.deletion.CASCADE,
                                    to='api.user_types')),
+                ('birthday', models.DateField()),
+                ('gender', models.CharField(max_length=50))
             ],
         ),
     ]

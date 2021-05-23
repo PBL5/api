@@ -63,19 +63,19 @@ class DateClass(models.Model):
                           editable=False,
                           unique=True)
     date = models.DateTimeField()
-    Class = models.ForeignKey(Classes, on_delete=models.CASCADE, null=True)
+    course = models.ForeignKey(Classes, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.date
 
 
-class DetailStudentAttendClass(models.Model):
-    id = models.AutoField(primary_key=True,
+class Details_Student_Attend_Class(models.Model):
+    detail_student_class_id = models.AutoField(primary_key=True,
                           null=False,
                           editable=False,
                           unique=True)
     student = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)
-    Class = models.ForeignKey(Classes, on_delete=models.CASCADE, null=True)
+    course = models.ForeignKey(Classes, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.student.full_name

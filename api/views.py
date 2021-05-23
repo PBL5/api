@@ -7,17 +7,24 @@ from rest_framework import generics
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from .models import Classes, Users
+from .models import Classes, Details_Student_Attend_Class, Users
 from .serializer import ClassSerializer, LoginSerializer, StudentSerializer, UserSerializer
 
 
 class StudentAPIView(generics.GenericAPIView):
     serializer_class = StudentSerializer
+    class_id_param = openapi.Parameter('class_id',
+                                       in_=openapi.IN_QUERY,
+                                       type=openapi.TYPE_INTEGER)
 
+    @swagger_auto_schema(manual_parameters=[class_id_param])
     def get(self, request):
-        students = Users.objects.filter(user_type=1)
-        serializer = StudentSerializer(students, many=True)
-        return Response(serializer.data)
+        class_id = request.query_params['class_id']
+
+        student = Details_Student_Attend_Class.objects.filter(course__pk=class_id).values_list()
+        print(student[0][1])
+        print(student)
+        return Response()
 
 
 class ClassAPIView(generics.GenericAPIView):

@@ -23,6 +23,7 @@ urlpatterns = [
     path('login', views.LoginAPIView.as_view()),
     path('students', views.StudentAPIView.as_view()),
     path('classes', views.ClassAPIView.as_view()),
+
     path('doc',
          schema_view.with_ui('swagger', cache_timeout=0),
          name='schema-swagger-ui'),
