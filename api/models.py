@@ -23,6 +23,8 @@ class Users(models.Model):
     user_type = models.ForeignKey(User_Types,
                                   on_delete=models.CASCADE,
                                   null=True)
+    gender = models.CharField(max_length=10)
+    birthday = models.DateField()
 
     def __str__(self):
         return self.full_name
@@ -57,7 +59,7 @@ class Classes(models.Model):
         return self.subject.subject_name
 
 
-class DateClass(models.Model):
+class Dates_Class(models.Model):
     id = models.AutoField(primary_key=True,
                           null=False,
                           editable=False,
@@ -71,9 +73,9 @@ class DateClass(models.Model):
 
 class Details_Student_Attend_Class(models.Model):
     detail_student_class_id = models.AutoField(primary_key=True,
-                          null=False,
-                          editable=False,
-                          unique=True)
+                                               null=False,
+                                               editable=False,
+                                               unique=True)
     student = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)
     course = models.ForeignKey(Classes, on_delete=models.CASCADE, null=True)
 
@@ -87,7 +89,7 @@ class StudentAttending(models.Model):
                           editable=False,
                           unique=True)
     isAttending = models.BooleanField()
-    dateClass = models.ForeignKey(DateClass,
+    dateClass = models.ForeignKey(Dates_Class,
                                   on_delete=models.CASCADE,
                                   null=True)
     student = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)

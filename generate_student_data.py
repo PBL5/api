@@ -55,4 +55,17 @@ def __main__():
         print(init_data[i], ',')
 
 
-__main__()
+def generate_insert_detail_class():
+    print(
+        'insert into api_details_student_attend_class (student_id, course_id) values'
+    )
+    for i in range(1, 41):
+        print('(', i, ', 1),')
+    for i in range(1, 20):
+        print('(', i, ', 2),')
+    for i in range(13, 35):
+        print('(', i, ', 3),')
+
+
+generate_insert_detail_class()
+#  __main__()

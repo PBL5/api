@@ -8,24 +8,25 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=125)
 
 
-class StudentSerializer(serializers.ModelSerializer):
-    full_name = serializers.CharField(max_length=50)
-    email = serializers.CharField(max_length=50)
+class StudentFilterSerializer(serializers.Serializer):
+    class FilterPayloadSerializer(serializers.Serializer):
+        birthday = serializers.DateField()
+        gender = serializers.CharField(max_length=10)
+        email = serializers.CharField(max_length=255)
+        user_id = serializers.IntegerField()
+        full_name = serializers.CharField(max_length=255)
+
+    class_id = serializers.IntegerField()
+    filter_options = FilterPayloadSerializer(read_only=True)
+
+
+class UserSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    full_name = serializers.CharField(max_length=255)
+    email = serializers.CharField(max_length=255)
     user_type = serializers.CharField(max_length=50)
-
-    class Meta:
-        model = Users
-        fields = ('full_name', 'email', 'user_type')
-
-
-class UserSerializer(serializers.ModelSerializer):
-    full_name = serializers.CharField(max_length=50)
-    email = serializers.CharField(max_length=50)
-    user_type = serializers.CharField(max_length=50)
-
-    class Meta:
-        model = Users
-        fields = ('full_name', 'email', 'user_type')
+    gender = serializers.CharField(max_length=10)
+    birthday = serializers.DateField()
 
 
 class SubjectSerializer(serializers.ModelSerializer):
