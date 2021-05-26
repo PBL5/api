@@ -13,7 +13,7 @@ class StudentFilterSerializer(serializers.Serializer):
         birthday = serializers.DateField()
         gender = serializers.CharField(max_length=10)
         email = serializers.CharField(max_length=255)
-        user_id = serializers.IntegerField()
+        student_id = serializers.IntegerField()
         full_name = serializers.CharField(max_length=255)
 
     class_id = serializers.IntegerField()
