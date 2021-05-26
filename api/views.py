@@ -29,8 +29,8 @@ class StudentAPIView(generics.GenericAPIView):
             if 'email' in filter_options:
                 students = students.filter(email=filter_options['email'])
 
-            if 'user_id' in filter_options:
-                students = students.filter(user_id=filter_options['user_id'])
+            if 'student_id' in filter_options:
+                students = students.filter(user_id=filter_options['student_id'])
 
             if 'birthday' in filter_options:
                 students = students.filter(birthday=filter_options['birthday'])
