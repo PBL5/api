@@ -24,7 +24,7 @@ urlpatterns = [
     path('students', views.StudentAPIView.as_view()),
     path('classes', views.ClassAPIView.as_view()),
     path('recognizes', views.RecognizeAPIView.as_view()),
-    path('training-facenets', views.TrainFaceNetForNewPerSonAPIView.as_view()),
+    path('student/add', views.AddStudentAPIView.as_view()),
 
     path('doc',
          schema_view.with_ui('swagger', cache_timeout=0),

@@ -1,6 +1,7 @@
 import detect
 import face_reg_img2
 import numpy as np
+import matplotlib.pyplot as plt
 
 class Recog_Module:
     def __init__(self):
@@ -11,7 +12,6 @@ class Recog_Module:
         recog = face_reg_img2.FaceRecog()
 
         cropped_face_list = mtcnn_detect.main(img_path)
-        print(len(cropped_face_list))
         recog_faces = []
         for cropped_item in cropped_face_list:
             person_name = recog.main(cropped_item)

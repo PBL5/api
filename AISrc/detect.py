@@ -49,11 +49,12 @@ class MTCNN_Detect:
         current_path = str(os.path.abspath(os.getcwd())) # .../AISrc
         length = len(current_path)
         current_path = current_path[:length-6] # ... /MiAI_Facerecog_2
-        newpath = current_path + "\Dataset\\FaceData\\processed\\" + name
+        newpath = current_path + "/Dataset/FaceData/processed/" + name
         if not os.path.exists(newpath):
             os.makedirs(newpath)
 
         for filename in os.listdir(raw_path):
+            print(filename)
             img = cv2.imread(os.path.join(raw_path,filename))
             if img is not None:
                 images.append(img)
@@ -65,6 +66,10 @@ class MTCNN_Detect:
                     w = item['box'][2]
                     h = item['box'][3]
                     crop_img = img[y:y+h, x:x+w]
+
+                    if crop_img.size == 0:
+                        continue
+
                     crop_img2 = cv2.resize(crop_img,(160, 160))
                     img_name = str(dem+1) + ".jpg"
                     cv2.imwrite(os.path.join(newpath , img_name), crop_img2)

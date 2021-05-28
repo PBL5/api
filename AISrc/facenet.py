@@ -44,6 +44,8 @@ import math
 from six import iteritems
 import imageio
 
+os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices'
+
 
 def triplet_loss(anchor, positive, negative, alpha):
     """Calculate the triplet loss according to the FaceNet paper

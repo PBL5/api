@@ -48,8 +48,9 @@ class ClassSerializer(serializers.ModelSerializer):
         fields = ('class_id', 'subject', 'teacher')
 
 
-class FileSerializer(serializers.ModelSerializer):
-    file = serializers.ImageField()
-    class Meta:
-        model = FileStore
-        fields = ('__all__')
+class AddStudentSerializer(serializers.Serializer):
+    full_name = serializers.CharField(max_length=255)
+    email = serializers.CharField(max_length=255)
+    gender = serializers.CharField(max_length=10)
+    birthday = serializers.DateField()
+    password = serializers.CharField(max_length=255)

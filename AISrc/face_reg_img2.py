@@ -59,7 +59,7 @@ class FaceRecog:
                         argmin = np.argsort(sim)[::1][:1]
                         label = [labels[idx] for idx in argmin][0]
 
-                        p = paths[label*10]
+                        p = paths[label*20]
                         processed_path = current_path + "/Dataset/FaceData/processed/"
                         p = p[len(processed_path):]
                         print(p)

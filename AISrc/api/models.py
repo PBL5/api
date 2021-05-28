@@ -27,7 +27,7 @@ class Users(models.Model):
     birthday = models.DateField()
 
     def __str__(self):
-        return self.full_name
+        return str(self.user_id)
 
 
 class Subjects(models.Model):
@@ -64,11 +64,11 @@ class Dates_Class(models.Model):
                           null=False,
                           editable=False,
                           unique=True)
-    date = models.DateTimeField()
+    date = models.DateField()
     course = models.ForeignKey(Classes, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.date
+        return str(self.id)
 
 
 class Details_Student_Attend_Class(models.Model):
@@ -95,7 +95,7 @@ class StudentAttending(models.Model):
     student = models.ForeignKey(Users, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.isAttending
+        return str(self.id)
 
 
 class FileStore(models.Model):
