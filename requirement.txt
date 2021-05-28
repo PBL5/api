@@ -1,4 +1,0 @@
-djangorestframework
-drf_yasg
-psycopg2
-django-cors-headers

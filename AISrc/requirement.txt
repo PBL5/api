@@ -1,0 +1,17 @@
+djangorestframework
+drf_yasg
+psycopg2
+django-cors-headers
+tensorflow==2.4.0
+keras==2.4.3
+scipy==1.6.2
+scikit-learn
+opencv-python
+h5py==2.10.0
+matplotlib
+Pillow
+requests
+psutil
+launchpadlib
+mtcnn
+imageio
