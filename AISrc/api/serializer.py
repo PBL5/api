@@ -30,6 +30,13 @@ class UserSerializer(serializers.Serializer):
     gender = serializers.CharField(max_length=10)
     birthday = serializers.DateField()
 
+class StudentSerialzer(serializers.Serializer):
+    students = UserSerializer()
+
+    def create(self, students):
+        self.students = students
+    
+
 
 class SubjectSerializer(serializers.ModelSerializer):
     subject_name = serializers.CharField(max_length=50)

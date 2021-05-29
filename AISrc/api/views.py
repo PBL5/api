@@ -3,13 +3,11 @@ import random
 import re
 import string
 import test
+from datetime import date
 
 import detect
 import facenetv2
 import requests
-
-from datetime import date
-
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -24,7 +22,7 @@ from rest_framework.response import Response
 from .models import Classes, Dates_Class, StudentAttending, User_Types, Users
 from .serializer import (AddStudentSerializer, ClassSerializer,
                          LoginSerializer, StudentFilterSerializer,
-                         UserSerializer)
+                         StudentSerialzer, UserSerializer)
 
 RASP_API_ENTRY_POINT = 'http://192.168.1.135:8000/rasp/'
 FILE_NAME_LENGTH = 10
@@ -56,6 +54,25 @@ class StudentAPIView(generics.GenericAPIView):
 
             if 'birthday' in filter_options:
                 students = students.filter(birthday=filter_options['birthday'])
+
+        serializer = UserSerializer(students, many=True)
+        return Response(serializer.data)
+
+
+class AttendanceAPIView(generics.GenericAPIView):
+    class_id_param = openapi.Parameter('class_id',
+                                       in_=openapi.IN_QUERY,
+                                       type=openapi.TYPE_STRING)
+
+    @swagger_auto_schema(manual_parameters=[class_id_param])
+    def get(self, request):
+        class_id = request.query_params['class_id']
+
+        today = date.today()
+
+        students = Users.objects.filter(
+            studentattending__dateClass__course__pk=class_id,
+            studentattending__dateClass__date=today)
 
         serializer = UserSerializer(students, many=True)
         return Response(serializer.data)
@@ -109,38 +126,40 @@ class RecognizeAPIView(generics.CreateAPIView):
 
     @swagger_auto_schema(manual_parameters=[class_id_param])
     def get(self, request, *args, **kwargs):
-        #  class_id = request.query_params['class_id']
+        print('start', request.query_params)
+        class_id = request.query_params['class_id']
 
-        #  today = date.today()
-        #  course = Classes.objects.get(pk=class_id)
-        #  date_class = {}
-        #  try:
-        #      date_class = Dates_Class.objects.get(date=today, course=course)
-        #  except Dates_Class.DoesNotExist:
-        #      date_class = Dates_Class.objects.create(date=today, course=course)
+        today = date.today()
+        course = Classes.objects.get(pk=class_id)
+        date_class = {}
+        try:
+            date_class = Dates_Class.objects.get(date=today, course=course)
+        except Dates_Class.DoesNotExist:
+            date_class = Dates_Class.objects.create(date=today, course=course)
 
         #  img_path = self.save_file()
-        
-        img_path = str(os.path.abspath(os.getcwd())) + '/img/5.jpg' # .../AISrc
+
+        current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
+        img_path = current_path + '/img/5.jpg'
 
         recog_api = test.Recog_Module()
         recoged_faces = recog_api.Recog_Process(img_path)
 
-#          for user_id in recoged_faces:
-            #  user_id = int(user_id)
-            #  student = Users.objects.get(pk=user_id)
+        for user_id in recoged_faces:
+            user_id = int(user_id)
+            student = Users.objects.get(pk=user_id)
 
-            #  exist_attendances = StudentAttending.objects.filter(
-            #      student__pk=user_id, dateClass__pk=date_class.id).count()
+            exist_attendances = StudentAttending.objects.filter(
+                student__pk=user_id, dateClass__pk=date_class.id).count()
 
-            #  if exist_attendances == 0:
-            #      print(user_id, 'not exist')
-            #      StudentAttending.objects.create(isAttending=True,
-            #                                      dateClass=date_class,
-                                                #  student=student)
+            if exist_attendances == 0:
+                print(user_id, 'not exist')
+                StudentAttending.objects.create(isAttending=True,
+                                                dateClass=date_class,
+                                                student=student)
 
-        #  return Response()
-        return Response(recoged_faces)
+        print(recoged_faces)
+        return Response()
 
 
 class AddStudentAPIView(generics.GenericAPIView):
