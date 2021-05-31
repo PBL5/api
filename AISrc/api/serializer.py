@@ -1,6 +1,8 @@
+from django.core.files.base import File
 from rest_framework import serializers
+from rest_framework.fields import ImageField
 
-from .models import Classes, Subjects, Users
+from .models import Classes, Subjects, Users, FileStore
 
 
 class LoginSerializer(serializers.Serializer):
@@ -28,6 +30,13 @@ class UserSerializer(serializers.Serializer):
     gender = serializers.CharField(max_length=10)
     birthday = serializers.DateField()
 
+class StudentSerialzer(serializers.Serializer):
+    students = UserSerializer()
+
+    def create(self, students):
+        self.students = students
+    
+
 
 class SubjectSerializer(serializers.ModelSerializer):
     subject_name = serializers.CharField(max_length=50)
@@ -44,3 +53,11 @@ class ClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classes
         fields = ('class_id', 'subject', 'teacher')
+
+
+class AddStudentSerializer(serializers.Serializer):
+    full_name = serializers.CharField(max_length=255)
+    email = serializers.CharField(max_length=255)
+    gender = serializers.CharField(max_length=10)
+    birthday = serializers.DateField()
+    password = serializers.CharField(max_length=255)
