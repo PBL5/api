@@ -1,3 +1,8 @@
+# Trang HNP 
+Repository for split detect,recognize; combine with API: https://github.com/trangmoon309/recognize-AI-django
+=> Merged to this repository
+
+
 # MiAI_FaceRecog_2
 Nhận diện khuôn mặt khá chuẩn xác bằng MTCNN và Facenet!
 
@@ -8,7 +13,4 @@ Fanpage: http://facebook.com/miaiblog<br>
 Group trao đổi, chia sẻ: https://www.facebook.com/groups/miaigroup<br>
 Website: http://ainoodle.tech<br>
 Youtube: http://bit.ly/miaiyoutube<br>
-
-# Trang HNP 
-Repository for split detect,recognize; combine with API: https://github.com/trangmoon309/recognize-AI-django
 
