@@ -8,3 +8,7 @@ Fanpage: http://facebook.com/miaiblog<br>
 Group trao đổi, chia sẻ: https://www.facebook.com/groups/miaigroup<br>
 Website: http://ainoodle.tech<br>
 Youtube: http://bit.ly/miaiyoutube<br>
+
+# Trang HNP
+Repository for detect,recognize and combine with API: https://github.com/trangmoon309/recognize-AI-django
+
