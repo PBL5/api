@@ -86,8 +86,13 @@ class LoginAPIView(generics.GenericAPIView):
     def post(self, request):
         email = request.data["email"]
         password = request.data["password"]
+
         try:
             user = Users.objects.get(email=email)
+
+            # Check user logging in is teacher
+            if user.user_type_id != 2:
+                return HttpResponse('Only teacher can login', status = 401)
 
             if user.password == password:
                 serializer = UserSerializer(user)
