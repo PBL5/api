@@ -95,7 +95,7 @@ class FaceNet:
             test.crop_and_save(raw_path, item)
         self.export_new_feature(item)
 
-#f = FaceNet()
+# f = FaceNet()
 #f.export_new_feature('jennie')
 #arr = f.export_feature_from_processed()
 #print(arr)
@@ -106,4 +106,4 @@ class FaceNet:
 #print(np.load('labels.npy'))
 # old len = 29
 
-#print(f.initialize_all_featute())
+# print(f.initialize_all_featute())

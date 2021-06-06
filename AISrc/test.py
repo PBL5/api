@@ -13,11 +13,13 @@ class Recog_Module:
 
         cropped_face_list = mtcnn_detect.main(img_path)
         recog_faces = []
+        dem = 1
         for cropped_item in cropped_face_list:
-            person_name = recog.main(cropped_item)
+            person_name = recog.main(cropped_item, dem)
             if person_name != "":
                 recog_faces.append(person_name)
+            dem = dem + 1
         return recog_faces
             
-#r = Recog_Module()
-#r.Recog_Process( r"test\\jennie.jpg")
+# r = Recog_Module()
+# r.Recog_Process( r"/home/leo/global/pbl5/pbl5-api/test/4.jpg")

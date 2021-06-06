@@ -26,6 +26,7 @@ urlpatterns = [
     path('recognizes', views.RecognizeAPIView.as_view()),
     path('student/add', views.AddStudentAPIView.as_view()),
     path('attendance', views.AttendanceAPIView.as_view()),
+    path('init', views.InitStudentAPIView.as_view()),
 
     path('doc',
          schema_view.with_ui('swagger', cache_timeout=0),

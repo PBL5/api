@@ -372,7 +372,7 @@ def load_model(model, input_map=None):
     #  or if it is a protobuf file with a frozen graph
     model_exp = os.path.expanduser(model)
     if (os.path.isfile(model_exp)):
-        print('Model filename: %s' % model_exp)
+        # print('Model filename: %s' % model_exp)
         with gfile.FastGFile(model_exp,'rb') as f:
             graph_def = tf.GraphDef()
             graph_def.ParseFromString(f.read())

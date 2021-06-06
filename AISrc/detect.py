@@ -28,6 +28,7 @@ class MTCNN_Detect:
 
         cropped_list = []
 
+        dem = 0
         for i in range(faces_found):    
             bb[i][0] = det[i][0]
             bb[i][1] = det[i][1]
@@ -39,7 +40,13 @@ class MTCNN_Detect:
             w = bb[i][2]
             h = bb[i][3]
             cropped = cap[y:y+h, x:x+w]
-            cropped_list.append(cropped)
+            if cropped.size != 0 :
+                crop_img2 = cv2.resize(cropped,(160, 160))
+                img_name = str(dem+1) + ".jpg"
+                cv2.imwrite(os.path.join("/home/leo/global/pbl5/pbl5-api/cropped/" , img_name), crop_img2)
+                cv2.waitKey(0)
+                dem = dem +1
+                cropped_list.append(cropped)
 
         return cropped_list
 

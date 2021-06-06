@@ -6,7 +6,7 @@ import numpy as np
 class Converter:
     def __init__(self):
         """ CHANGE THE SAMPLE DATA HERE """
-        self.distance_samples = np.array([0.58, 0.66, 0.75, 0.8, 0.85, 0.9, 0.95, 0.98, 1, 1.1, 1.2], dtype=float)
+        self.distance_samples = np.array([0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1, 1.2], dtype=float)
         self.similarity_samples = np.array([100, 95, 90, 85, 82, 82, 75, 50, 40, 20,10 ], dtype=float)
 
         self.tck = interpolate.splrep(self.distance_samples, self.similarity_samples)

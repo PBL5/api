@@ -2,27 +2,23 @@ import os
 import random
 import re
 import string
-import test
 from datetime import date
 
-import detect
-import facenetv2
 import requests
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.files.base import ContentFile
-from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
-from rest_framework.parsers import (FileUploadParser, FormParser, JSONParser,
-                                    MultiPartParser)
 from rest_framework.response import Response
+
+import facenetv2
+import test
 
 from .models import Classes, Dates_Class, StudentAttending, User_Types, Users
 from .serializer import (AddStudentSerializer, ClassSerializer,
                          LoginSerializer, StudentFilterSerializer,
-                         StudentSerialzer, UserSerializer)
+                         UserSerializer)
 
 RASP_API_ENTRY_POINT = 'http://192.168.1.135:8000/rasp/'
 FILE_NAME_LENGTH = 10
@@ -126,16 +122,16 @@ class RecognizeAPIView(generics.CreateAPIView):
 
     @swagger_auto_schema(manual_parameters=[class_id_param])
     def get(self, request, *args, **kwargs):
-        print('start', request.query_params)
-        class_id = request.query_params['class_id']
+        # print('start', request.query_params)
+        # class_id = request.query_params['class_id']
 
-        today = date.today()
-        course = Classes.objects.get(pk=class_id)
-        date_class = {}
-        try:
-            date_class = Dates_Class.objects.get(date=today, course=course)
-        except Dates_Class.DoesNotExist:
-            date_class = Dates_Class.objects.create(date=today, course=course)
+        # today = date.today()
+        # course = Classes.objects.get(pk=class_id)
+        # date_class = {}
+        # try:
+        #     date_class = Dates_Class.objects.get(date=today, course=course)
+        # except Dates_Class.DoesNotExist:
+        #     date_class = Dates_Class.objects.create(date=today, course=course)
 
         #  img_path = self.save_file()
 
@@ -145,18 +141,18 @@ class RecognizeAPIView(generics.CreateAPIView):
         recog_api = test.Recog_Module()
         recoged_faces = recog_api.Recog_Process(img_path)
 
-        for user_id in recoged_faces:
-            user_id = int(user_id)
-            student = Users.objects.get(pk=user_id)
+        # for user_id in recoged_faces:
+        #     user_id = int(user_id)
+        #     student = Users.objects.get(pk=user_id)
 
-            exist_attendances = StudentAttending.objects.filter(
-                student__pk=user_id, dateClass__pk=date_class.id).count()
+        #     exist_attendances = StudentAttending.objects.filter(
+        #         student__pk=user_id, dateClass__pk=date_class.id).count()
 
-            if exist_attendances == 0:
-                print(user_id, 'not exist')
-                StudentAttending.objects.create(isAttending=True,
-                                                dateClass=date_class,
-                                                student=student)
+        #     if exist_attendances == 0:
+        #         print(user_id, 'not exist')
+        #         StudentAttending.objects.create(isAttending=True,
+        #                                         dateClass=date_class,
+        #                                         student=student)
 
         print(recoged_faces)
         return Response()
@@ -179,32 +175,36 @@ class AddStudentAPIView(generics.GenericAPIView):
 
     @swagger_auto_schema(request_body=AddStudentSerializer)
     def post(self, request):
-        # Create user
+        #  Comment following 23 lines if you want to create trained file with the existing dataset
         full_name = request.data['full_name']
         email = request.data['email']
-        password = request.data['password']
         birthday = request.data['birthday']
         gender = request.data['gender']
 
         student_user_type = User_Types.objects.get(pk=1)
         user = Users.objects.create(full_name=full_name,
-                                    email=email,
-                                    password=password,
-                                    birthday=birthday,
-                                    gender=gender,
-                                    user_type=student_user_type)
+                                   email=email,
+                                   birthday=birthday,
+                                   gender=gender,
+                                   user_type=student_user_type)
 
-        current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
-        length = len(current_path)
-        current_path = current_path[:length - 6]
-        folder_contain_img_path = current_path + '/Dataset/FaceData/raw/' + str(
-            user.user_id) + '/'
-        os.mkdir(folder_contain_img_path)
+        # current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
+        # length = len(current_path)
+        # current_path = current_path[:length - 6]
+        # folder_contain_img_path = current_path + '/Dataset/FaceData/raw/' + str(
+        #     user.user_id) + '/'
+        # os.mkdir(folder_contain_img_path)
 
-        for i in range(20):
-            self.save_file(folder_contain_img_path)
+        # for i in range(20):
+        #     self.save_file(folder_contain_img_path)
 
         face_net = facenetv2.FaceNet()
         face_net.export_new_feature(str(user.user_id))
-        # face_net.initialize_all_featute()
+        #  face_net.initialize_all_featute()
         return Response("thành công!")
+
+class InitStudentAPIView(generics.GenericAPIView):
+    def get(self, request):
+        face_net = facenetv2.FaceNet()
+        face_net.initialize_all_featute()
+        return Response()

@@ -16,7 +16,7 @@ class FaceRecog:
     def __init__(self):
         self.cropped = np.zeros((2, 2))
             
-    def main(self, cropped):
+    def main(self, cropped, dem):
         
         # Cai dat cac tham so can thiet
         INPUT_IMAGE_SIZE = 160
@@ -56,23 +56,24 @@ class FaceRecog:
                         # [-1,1]
                         sim = euclidean_distances(emb_arrays, emb_array)
                         sim = np.squeeze(sim, axis = 1)
-                        argmin = np.argsort(sim)[::1][:1]
-                        label = [labels[idx] for idx in argmin][0]
+                        labels = np.where(sim == min(sim))
+                        label = labels[0][0]
 
-                        p = paths[label*20]
+
+                        p = paths[label]
                         processed_path = current_path + "/Dataset/FaceData/processed/"
                         p = p[len(processed_path):]
-                        print(p)
 
                         strArr = p.split('/')
                         personName = strArr[0]
 
                         dis = converter.Converter()
                         probability = dis.convert_dis2sim(min(sim))
-                        print("Name: {}, Probability: {}".format(personName, probability))
 
-                        if probability > 70:
+                        if probability > 81:
                             recoged_name = personName
+                            print("Hinh: {}, Name: {}, Probability: {}".format(dem, personName, probability))
+
                         # # Neu ty le nhan dang > 0.5 thi hien thi ten
                         # if probability > 70:
                         #     name = personName
