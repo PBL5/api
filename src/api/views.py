@@ -1,4 +1,3 @@
-# import sys
 import os
 import random
 import re
@@ -13,8 +12,6 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
 from rest_framework.response import Response
 
-# sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-
 from ai_models import recog, train
 
 from api.models import Classes, Dates_Class, StudentAttending, User_Types, Users
@@ -27,7 +24,8 @@ FILE_NAME_LENGTH = 10
 
 
 class StudentAPIView(generics.GenericAPIView):
-    @swagger_auto_schema(request_body=StudentFilterSerializer)
+    @swagger_auto_schema(operation_description='Search students',
+                         request_body=StudentFilterSerializer)
     def post(self, request):
         class_id = request.data['class_id']
 
@@ -62,7 +60,8 @@ class AttendanceAPIView(generics.GenericAPIView):
                                        in_=openapi.IN_QUERY,
                                        type=openapi.TYPE_STRING)
 
-    @swagger_auto_schema(manual_parameters=[class_id_param])
+    @swagger_auto_schema(operation_description='Get all students in class',
+                         manual_parameters=[class_id_param])
     def get(self, request):
         class_id = request.query_params['class_id']
 
@@ -77,6 +76,7 @@ class AttendanceAPIView(generics.GenericAPIView):
 
 
 class ClassAPIView(generics.GenericAPIView):
+    @swagger_auto_schema(operation_description='Get all classes')
     def get(self, request):
         classes = Classes.objects.all()
         serializer = ClassSerializer(classes, many=True)
@@ -84,7 +84,8 @@ class ClassAPIView(generics.GenericAPIView):
 
 
 class LoginAPIView(generics.GenericAPIView):
-    @swagger_auto_schema(request_body=LoginSerializer)
+    @swagger_auto_schema(operation_description='Login',
+                         request_body=LoginSerializer)
     def post(self, request):
         email = request.data["email"]
         password = request.data["password"]
@@ -109,7 +110,8 @@ class RecognizeAPIView(generics.CreateAPIView):
                                        in_=openapi.IN_QUERY,
                                        type=openapi.TYPE_STRING)
 
-    def save_file(self):
+    @classmethod
+    def save_file(cls):
         current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
         response = requests.get(RASP_API_ENTRY_POINT + 'capture')
 
@@ -127,7 +129,8 @@ class RecognizeAPIView(generics.CreateAPIView):
 
         return img_path
 
-    @swagger_auto_schema(manual_parameters=[class_id_param])
+    @swagger_auto_schema(operation_description='Recognize student',
+                         manual_parameters=[class_id_param])
     def get(self, request, *args, **kwargs):
         # print('start', request.query_params)
         # class_id = request.query_params['class_id']
@@ -180,7 +183,7 @@ class AddStudentAPIView(generics.GenericAPIView):
         with open(img_path, 'wb') as f:
             f.write(response.content)
 
-    @swagger_auto_schema(request_body=AddStudentSerializer)
+    @swagger_auto_schema(operation_description='Add student', request_body=AddStudentSerializer)
     def post(self, request):
         #  Comment following 23 lines if you want to create trained file with the existing dataset
         full_name = request.data['full_name']
@@ -205,14 +208,15 @@ class AddStudentAPIView(generics.GenericAPIView):
         # for i in range(20):
         #     self.save_file(folder_contain_img_path)
 
-        face_net = facenetv2.FaceNet()
+        face_net = train.FaceNet()
         face_net.export_new_feature(str(user.user_id))
         #  face_net.initialize_all_featute()
         return Response("thành công!")
 
 
 class InitStudentAPIView(generics.GenericAPIView):
+    @swagger_auto_schema(operation_description='Init students with seed data')
     def get(self, request):
-        face_net = facenetv2.FaceNet()
+        face_net = train.FaceNet()
         face_net.initialize_all_featute()
         return Response()
