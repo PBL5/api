@@ -14,7 +14,7 @@ Folder structure will look like
 ```
 .
 |
---AISrc
+--src
 |
 --Models
   |
@@ -26,7 +26,7 @@ Folder structure will look like
 Then, you have to ensure database configuration in `AISrc/src/settings.py` is correct
 
 ```
-cd AISrc
+cd src
 
 # Run migration if your database is empty
 python3 manage.py migrate
@@ -34,3 +34,11 @@ python3 manage.py migrate
 Next step, let's create folder `Dataset/FaceData` in the root of project, add 2 subfolders `processed` and `raw`
 
 Download dataset from [this](https://drive.google.com/drive/folders/1itJjeBTp5CEW-gFDt2cMl7AN4DeeTHR3) and put it into `raw`
+
+You need to add directory of this project:
+* For Linux or MacOS:
+```
+PWD=$(pwd)
+export PYTHONPATH=$PYTHONPATH:$PWD/src 
+```
+

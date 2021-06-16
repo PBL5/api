@@ -1,0 +1,12 @@
+version: "3"
+services:
+  database:
+    image: "postgres:latest"
+    restart: always
+    volumes:
+        - ./docker-create-database:/docker-entrypoint-initdb.d
+    environment:
+        - POSTGRES_PASSWORD=Pbl5@final
+        - POSTGRES_DATABASE=pbl5
+    ports:
+      - "5433:5432"

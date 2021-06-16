@@ -1,4 +1,4 @@
-import sys
+# import sys
 import os
 import random
 import re
@@ -13,10 +13,9 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
 from rest_framework.response import Response
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+# sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-import facenetv2
-import test
+from ai_models import recog, train
 
 from api.models import Classes, Dates_Class, StudentAttending, User_Types, Users
 from api.serializer import (AddStudentSerializer, ClassSerializer,
