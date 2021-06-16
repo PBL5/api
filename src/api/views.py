@@ -1,3 +1,4 @@
+import sys
 import os
 import random
 import re
@@ -12,13 +13,15 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
 from rest_framework.response import Response
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 import facenetv2
 import test
 
-from .models import Classes, Dates_Class, StudentAttending, User_Types, Users
-from .serializer import (AddStudentSerializer, ClassSerializer,
-                         LoginSerializer, StudentFilterSerializer,
-                         UserSerializer)
+from api.models import Classes, Dates_Class, StudentAttending, User_Types, Users
+from api.serializer import (AddStudentSerializer, ClassSerializer,
+                            LoginSerializer, StudentFilterSerializer,
+                            UserSerializer)
 
 RASP_API_ENTRY_POINT = 'http://192.168.1.135:8000/rasp/'
 FILE_NAME_LENGTH = 10
@@ -92,7 +95,7 @@ class LoginAPIView(generics.GenericAPIView):
 
             # Check user logging in is teacher
             if user.user_type_id != 2:
-                return HttpResponse('Only teacher can login', status = 401)
+                return HttpResponse('Only teacher can login', status=401)
 
             if user.password == password:
                 serializer = UserSerializer(user)
@@ -188,10 +191,10 @@ class AddStudentAPIView(generics.GenericAPIView):
 
         student_user_type = User_Types.objects.get(pk=1)
         user = Users.objects.create(full_name=full_name,
-                                   email=email,
-                                   birthday=birthday,
-                                   gender=gender,
-                                   user_type=student_user_type)
+                                    email=email,
+                                    birthday=birthday,
+                                    gender=gender,
+                                    user_type=student_user_type)
 
         # current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
         # length = len(current_path)
@@ -207,6 +210,7 @@ class AddStudentAPIView(generics.GenericAPIView):
         face_net.export_new_feature(str(user.user_id))
         #  face_net.initialize_all_featute()
         return Response("thành công!")
+
 
 class InitStudentAPIView(generics.GenericAPIView):
     def get(self, request):
