@@ -14,7 +14,7 @@ from rest_framework.response import Response
 
 from ai_models import recog, train
 
-from api.models import Classes, Dates_Class, StudentAttending, User_Types, Users
+from api.models import Classes, Dates_Class, User_Types, Users
 from api.serializer import (AddStudentSerializer, ClassSerializer,
                             LoginSerializer, StudentFilterSerializer,
                             UserSerializer)
@@ -23,10 +23,13 @@ RASP_API_ENTRY_POINT = 'http://192.168.1.135:8000/rasp/'
 FILE_NAME_LENGTH = 10
 
 
-class StudentAPIView(generics.GenericAPIView):
+class SearchStudentView(generics.GenericAPIView):
     @swagger_auto_schema(operation_description='Search students',
                          request_body=StudentFilterSerializer)
     def post(self, request):
+        if not 'class_id' in request.data:
+            return HttpResponse('class_id is required', status=400)
+
         class_id = request.data['class_id']
 
         students = Users.objects.filter(
@@ -34,6 +37,7 @@ class StudentAPIView(generics.GenericAPIView):
 
         if 'filter_options' in request.data:
             filter_options = request.data['filter_options']
+            print(filter_options)
             if 'gender' in filter_options:
                 students = students.filter(gender=filter_options['gender'])
 

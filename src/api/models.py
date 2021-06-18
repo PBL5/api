@@ -1,3 +1,4 @@
+import string
 from django.db import models
 
 
@@ -56,7 +57,7 @@ class Classes(models.Model):
                                 blank=True)
 
     def __str__(self):
-        return self.subject.subject_name
+        return str(self.class_id)
 
 
 class Dates_Class(models.Model):
