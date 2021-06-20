@@ -164,3 +164,7 @@ LOGGING = {
         }
     }
 }
+
+REST_FRAMWORK = {
+    'TEST_REQUEST_DEFAULT_FORMAT': 'jon'
+}

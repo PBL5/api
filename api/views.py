@@ -27,6 +27,7 @@ class SearchStudentView(generics.GenericAPIView):
     @swagger_auto_schema(operation_description='Search students',
                          request_body=StudentFilterSerializer)
     def post(self, request):
+        print(request.data)
         if not 'class_id' in request.data:
             return HttpResponse('class_id is required', status=400)
 

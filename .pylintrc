@@ -5,7 +5,6 @@ disable=
     C0116, # missing-function-docstring,
     R0903, # two-few-public-method
     django-not-configured,
-    import-error,
-    wrong-import-position
+    import-error
 load-plugins=
     pylint_django

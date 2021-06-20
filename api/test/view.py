@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.urls import reverse
 
 from api.models import Classes, Details_Student_Attend_Class, Subjects, User_Types, Users
 
@@ -61,8 +62,8 @@ class SearchStudentTestCase(TestCase):
         self.assertEqual(response.data[1]['user_id'], 2)
 
     def test_search_with_full_name(self):
-        tmp = {'class_id': 1, 'filter_options': {'full_name': 'user 1'}}
-        response = self.client.post(self.search_student_url, tmp)
+        data = {'class_id': '1', 'filter_options': {'full_name': 'user 1'}}
+        response = self.client.post('/api/students', data, format='json')
 
         self.assertEqual(response.status_code, 200)
         #  self.assertEqual(len(response.data), 1)
