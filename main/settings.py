@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-ROOT_URLCONF = 'src.urls'
+ROOT_URLCONF = 'main.urls'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'src.wsgi.application'
+WSGI_APPLICATION = 'main.wsgi.application'
 
 SWAGGER_SETTINGS = {
     'JSON_EDITOR': True,
