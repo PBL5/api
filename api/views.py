@@ -12,10 +12,9 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
 from rest_framework.response import Response
 
-import facenetv2
-import test
+from src.recognize.main import RecognizeModule
 
-from .models import Classes, Dates_Class, StudentAttending, User_Types, Users
+from .models import Classes, Dates_Class, User_Types, Users
 from .serializer import (AddStudentSerializer, ClassSerializer,
                          LoginSerializer, StudentFilterSerializer,
                          UserSerializer)
@@ -203,13 +202,13 @@ class AddStudentAPIView(generics.GenericAPIView):
         # for i in range(20):
         #     self.save_file(folder_contain_img_path)
 
-        face_net = facenetv2.FaceNet()
+        face_net = RecognizeModule()
         face_net.export_new_feature(str(user.user_id))
         #  face_net.initialize_all_featute()
         return Response("thành công!")
 
 class InitStudentAPIView(generics.GenericAPIView):
     def get(self, request):
-        face_net = facenetv2.FaceNet()
+        face_net = RecognizeModule()
         face_net.initialize_all_featute()
         return Response()

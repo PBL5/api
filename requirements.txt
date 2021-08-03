@@ -15,3 +15,4 @@ psutil
 launchpadlib
 mtcnn
 imageio
+pylint-django
