@@ -8,7 +8,7 @@ sudo apt install libpq-dev
 pip3 install -r ./requirements.txt
 ```
 
-After that, download folder Models in this [link](https://drive.google.com/drive/folders/1FCeqwIX3C-lgCKFRMYFRB3cWL03J7rfS) and add to the root of this folder.
+After that, download folder Models in this [link](https://drive.google.com/u/0/uc?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-&export=download) and add to the root of this folder.
 
 Folder structure will look like
 ```
