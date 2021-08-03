@@ -157,8 +157,8 @@ Thumbs.db
 # profiling data
 .prof
 
-models
-dataset
+/models
+/dataset
 
 *.npy
 
