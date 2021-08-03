@@ -157,10 +157,8 @@ Thumbs.db
 # profiling data
 .prof
 
-Models
-
-AISrc/img/
-Dataset
+models
+dataset
 
 *.npy
 
