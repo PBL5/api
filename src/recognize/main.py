@@ -9,16 +9,16 @@ from . import facenet
 from .preprocess_image import PreprocessImage
 
 class RecognizeModule:
+    processed_dir="/dataset/processed/"
+
     def __init__(self):
         self.image_path = r"test/imgTest.jpg"
 
     def export_feature_from_processed(self):
         current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
-        length = len(current_path)
-        current_path = current_path[:length - 6]  # ... /MiAI_Facerecog_2
-        facenet_model_path = current_path + '/Models/20180402-114759.pb'
+        facenet_model_path = current_path + '/models/20180402-114759.pb'
 
-        processed_path = current_path + "/Dataset/FaceData/processed"
+        processed_path = current_path + RecognizeModule.processed_dir
         with tf.Graph().as_default():
             # Cai dat GPU neu co
             gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.6)
@@ -54,9 +54,9 @@ class RecognizeModule:
                     # trả về danh sách embedded vectors
                     emb_arrays[start_index:end_index, :] = sess.run(
                         embeddings, feed_dict=feed_dict)
-            save(current_path + '/data.npy', emb_arrays)
-            save(current_path + '/paths.npy', paths)
-            save(current_path + '/labels.npy', labels)
+            save(current_path + '/results/data.npy', emb_arrays)
+            save(current_path + '/results/paths.npy', paths)
+            save(current_path + '/results/labels.npy', labels)
         return emb_arrays
 
     def export_new_feature(self, name):
@@ -64,7 +64,7 @@ class RecognizeModule:
         current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
         length = len(current_path)
         current_path = current_path[:length - 6]  # ... /MiAI_Facerecog_2
-        raw_path = current_path + "/Dataset/FaceData/raw/" + name
+        raw_path = current_path + RecognizeModule.processed_dir + name
         test = PreprocessImage()
         test.crop_and_save(raw_path, name)
         new_emb_arrays = self.export_feature_from_processed()
@@ -72,11 +72,10 @@ class RecognizeModule:
 
 
     def initialize_all_featute(self):
-        current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
-        length = len(current_path)
-        current_path = current_path[:length - 6]  # ... /MiAI_Facerecog_2
+        current_path = str(os.path.abspath(os.getcwd()))  # pbl5-api
+        print(current_path)
 
-        folder = current_path + '/Dataset/FaceData/raw/'
+        folder = current_path + RecognizeModule.processed_dir 
         sub_folders = [name for name in os.listdir(folder) if os.path.isdir(os.path.join(folder, name))]
         print(sub_folders)
 
