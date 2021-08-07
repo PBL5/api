@@ -2,13 +2,16 @@
 ## Install
 ```
 # Install dependences
-sudo apt install libpq-dev
+sudo apt install libpq-dev # for deb
+sudo pacman -S postgresql-libs # for arch
+
 
 # Install pacakages
-pip3 install -r ./requirements.txt
+pip3 install -r ./requirements.txt # for deb
+pip install -r ./requirements.txt # for arch and window
 ```
 
-After that, download folder Models in this [link](https://drive.google.com/drive/folders/1FCeqwIX3C-lgCKFRMYFRB3cWL03J7rfS) and add to the root of this folder.
+After that, download folder Models in this [link](https://drive.google.com/file/d/1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-/view) and add to the root of this folder.
 
 Folder structure will look like
 ```
