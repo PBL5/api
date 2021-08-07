@@ -17,9 +17,11 @@ Folder structure will look like
 ```
 .
 |
---AISrc
+--api
 |
---Models
+--main
+|
+--modesl
   |
   --20180402-114759.pb
   |
@@ -34,6 +36,6 @@ cd AISrc
 # Run migration if your database is empty
 python3 manage.py migrate
 ```
-Next step, let's create folder `Dataset/FaceData` in the root of project, add 2 subfolders `processed` and `raw`
+Next step, let's create folder `dataset` in the root of project, add 3 subfolders `processed`, `raw` and `test`
 
 Download dataset from [this](https://drive.google.com/drive/folders/1itJjeBTp5CEW-gFDt2cMl7AN4DeeTHR3) and put it into `raw`
