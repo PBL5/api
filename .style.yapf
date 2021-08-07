@@ -1,0 +1,4 @@
+[style]
+based_on_style = pep8
+SPLIT_BEFORE_NAMED_ASSIGNS = false
+DEDENT_CLOSING_BRACKETS= True

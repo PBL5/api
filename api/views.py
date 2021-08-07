@@ -12,8 +12,6 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
 from rest_framework.response import Response
 
-from src.recognize.main import RecognizeModule
-
 from .models import Classes, Dates_Class, User_Types, Users
 from .serializer import (AddStudentSerializer, ClassSerializer,
                          LoginSerializer, StudentFilterSerializer,
