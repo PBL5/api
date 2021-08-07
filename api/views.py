@@ -140,7 +140,7 @@ class RecognizeAPIView(generics.CreateAPIView):
         #  img_path = self.save_file()
 
         current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
-        img_path = current_path + '/img/5.jpg'
+        img_path = current_path + '/dataset/test/HQT/5.jpg'
 
         recog_api = test.Recog_Module()
         recoged_faces = recog_api.Recog_Process(img_path)
@@ -209,6 +209,6 @@ class AddStudentAPIView(generics.GenericAPIView):
 
 class InitStudentAPIView(generics.GenericAPIView):
     def get(self, request):
-        face_net = RecognizeModule()
-        face_net.initialize_all_featute()
+        recognize_module = RecognizeModule()
+        recognize_module.initialize_all_featute()
         return Response()

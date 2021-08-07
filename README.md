@@ -13,7 +13,7 @@ pip install -r ./requirements.txt # for arch and window
 
 After that, download folder Models in this [link](https://drive.google.com/file/d/1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-/view) and add to the root of this folder.
 
-Folder structure will look like
+Folder structure will be like
 ```
 .
 |
@@ -28,7 +28,7 @@ Folder structure will look like
   --...
 ```
 
-Then, you have to ensure database configuration in `AISrc/src/settings.py` is correct
+Then, you have to ensure database configuration in `main/settings.py` is correct
 
 ```
 cd AISrc

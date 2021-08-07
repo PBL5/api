@@ -6,7 +6,10 @@ disable=
     C0116, # missing-function-docstring,
     R0903, # two-few-public-method
     django-not-configured,
-    import-error
     too-many-locals
 load-plugins=
     pylint_django
+extension-pkg-whitelist=tensorflow
+[TYPECHECK]
+ignored-modules=tensorflow
+ignored-classes=tensorflow

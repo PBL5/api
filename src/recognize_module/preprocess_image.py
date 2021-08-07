@@ -51,13 +51,12 @@ class PreprocessImage:
     def crop_and_save(self, raw_path, name):
         images = []
         dem = 0
-        current_path = str(os.path.abspath(os.getcwd())) # .../AISrc
-        length = len(current_path)
-        current_path = current_path[:length-6] # ... /MiAI_Facerecog_2
+        current_path = str(os.path.abspath(os.getcwd())) # .../
         newpath = current_path + "/dataset/processed/" + name
         if not os.path.exists(newpath):
             os.makedirs(newpath)
 
+        print(raw_path)
         for filename in os.listdir(raw_path):
             print(filename)
             img = cv2.imread(os.path.join(raw_path,filename))
