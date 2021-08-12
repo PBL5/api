@@ -15,10 +15,10 @@ from rest_framework.response import Response
 from src.recognize_module.main import init_atribute_vectors, recognize_students_in_image
 
 from .models import Classes, Dates_Class, User_Types, Users
-from .serializer import (AddStudentSerializer, ClassSerializer,
-                         LoginSerializer, StudentFilterSerializer,
-                         UserSerializer)
-
+from .serializer import (
+    AddStudentSerializer, ClassSerializer, LoginSerializer,
+    StudentFilterSerializer, UserSerializer
+)
 
 RASP_API_ENTRY_POINT = 'http://192.168.1.135:8000/rasp/'
 FILE_NAME_LENGTH = 10
@@ -30,7 +30,8 @@ class StudentAPIView(generics.GenericAPIView):
         class_id = request.data['class_id']
 
         students = Users.objects.filter(
-            details_student_attend_class__course__pk=class_id)
+            details_student_attend_class__course__pk=class_id
+        )
 
         if 'filter_options' in request.data:
             filter_options = request.data['filter_options']
@@ -39,14 +40,16 @@ class StudentAPIView(generics.GenericAPIView):
 
             if 'full_name' in filter_options:
                 students = students.filter(
-                    full_name=filter_options['full_name'])
+                    full_name=filter_options['full_name']
+                )
 
             if 'email' in filter_options:
                 students = students.filter(email=filter_options['email'])
 
             if 'student_id' in filter_options:
                 students = students.filter(
-                    user_id=filter_options['student_id'])
+                    user_id=filter_options['student_id']
+                )
 
             if 'birthday' in filter_options:
                 students = students.filter(birthday=filter_options['birthday'])
@@ -56,9 +59,9 @@ class StudentAPIView(generics.GenericAPIView):
 
 
 class AttendanceAPIView(generics.GenericAPIView):
-    class_id_param = openapi.Parameter('class_id',
-                                       in_=openapi.IN_QUERY,
-                                       type=openapi.TYPE_STRING)
+    class_id_param = openapi.Parameter(
+        'class_id', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+    )
 
     @swagger_auto_schema(manual_parameters=[class_id_param])
     def get(self, request):
@@ -68,7 +71,8 @@ class AttendanceAPIView(generics.GenericAPIView):
 
         students = Users.objects.filter(
             studentattending__dateClass__course__pk=class_id,
-            studentattending__dateClass__date=today)
+            studentattending__dateClass__date=today
+        )
 
         serializer = UserSerializer(students, many=True)
         return Response(serializer.data)
@@ -84,46 +88,46 @@ class ClassAPIView(generics.GenericAPIView):
 class LoginAPIView(generics.GenericAPIView):
     @swagger_auto_schema(request_body=LoginSerializer)
     def post(self, request):
-        email = request.data["email"]
-        password = request.data["password"]
+        email = request.data['email']
+        password = request.data['password']
 
         try:
             user = Users.objects.get(email=email)
 
             # Check user logging in is teacher
             if user.user_type_id != 2:
-                return HttpResponse('Only teacher can login', status = 401)
+                return HttpResponse('Only teacher can login', status=401)
 
             if user.password == password:
                 serializer = UserSerializer(user)
                 return Response(serializer.data)
             return HttpResponse('Password incorrect.', status=401)
         except ObjectDoesNotExist:
-            return HttpResponse("User doesn't exist", status=401)
+            return HttpResponse('User doesn\'t exist', status=401)
 
 
 class RecognizeAPIView(generics.CreateAPIView):
-    class_id_param = openapi.Parameter('class_id',
-                                       in_=openapi.IN_QUERY,
-                                       type=openapi.TYPE_STRING)
+    class_id_param = openapi.Parameter(
+        'class_id', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
+    )
 
-    def save_file(self):
-        current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
-        response = requests.get(RASP_API_ENTRY_POINT + 'capture')
+    #      def save_file(self):
+    #  current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
+    #  response = requests.get(RASP_API_ENTRY_POINT + 'capture')
 
-        response_file_name = re.findall(
-            "filename=(.+)", response.headers['content-disposition'])[0]
-        ext = os.path.splitext(response_file_name)
+    #  response_file_name = re.findall(
+    #      'filename=(.+)', response.headers['content-disposition'])[0]
+    #  ext = os.path.splitext(response_file_name)
 
-        file_name = ''.join(
-            random.choices(string.ascii_lowercase + string.digits,
-                           k=FILE_NAME_LENGTH))
+    #  file_name = ''.join(
+    #      random.choices(string.ascii_lowercase + string.digits,
+    #                     k=FILE_NAME_LENGTH))
 
-        img_path = current_path + '/img/' + file_name + ext[1][:-1]
-        with open(img_path, 'wb') as f:
-            f.write(response.content)
+    #  img_path = current_path + '/img/' + file_name + ext[1][:-1]
+    #  with open(img_path, 'wb') as f:
+    #      f.write(response.content)
 
-        return img_path
+    #          return img_path
 
     @swagger_auto_schema(manual_parameters=[class_id_param])
     def get(self, request, *args, **kwargs):
@@ -163,19 +167,19 @@ class RecognizeAPIView(generics.CreateAPIView):
 
 
 class AddStudentAPIView(generics.GenericAPIView):
-    def save_file(self, folder_contain_img_path):
-        response = requests.get(RASP_API_ENTRY_POINT + 'capture')
+    #   def save_file(self, folder_contain_img_path):
+    #  response = requests.get(RASP_API_ENTRY_POINT + 'capture')
 
-        response_file_name = re.findall(
-            "filename=(.+)", response.headers['content-disposition'])[0]
-        ext = os.path.splitext(response_file_name)
+    #  response_file_name = re.findall(
+    #      'filename=(.+)', response.headers['content-disposition'])[0]
+    #  ext = os.path.splitext(response_file_name)
 
-        file_name = ''.join(
-            random.choices(string.ascii_uppercase + string.digits,
-                           k=FILE_NAME_LENGTH))
-        img_path = folder_contain_img_path + file_name + ext[1][:-1]
-        with open(img_path, 'wb') as f:
-            f.write(response.content)
+    #  file_name = ''.join(
+    #      random.choices(string.ascii_uppercase + string.digits,
+    #                     k=FILE_NAME_LENGTH))
+    #  img_path = folder_contain_img_path + file_name + ext[1][:-1]
+    #  with open(img_path, 'wb') as f:
+    #           f.write(response.content)
 
     @swagger_auto_schema(request_body=AddStudentSerializer)
     def post(self, request):
@@ -186,11 +190,13 @@ class AddStudentAPIView(generics.GenericAPIView):
         gender = request.data['gender']
 
         student_user_type = User_Types.objects.get(pk=1)
-        user = Users.objects.create(full_name=full_name,
-                                   email=email,
-                                   birthday=birthday,
-                                   gender=gender,
-                                   user_type=student_user_type)
+        user = Users.objects.create(
+            full_name=full_name,
+            email=email,
+            birthday=birthday,
+            gender=gender,
+            user_type=student_user_type
+        )
 
         # current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
         # length = len(current_path)
@@ -204,9 +210,39 @@ class AddStudentAPIView(generics.GenericAPIView):
 
         #  face_net.export_new_feature(str(user.user_id))
         #  face_net.initialize_all_featute()
-        #  return Response("thành công!")
+        #  return Response('thành công!')
+
 
 class InitStudentAPIView(generics.GenericAPIView):
     def get(self, request):
-        init_atribute_vectors()
+        users: [Users] = Users.objects.all()
+        if users.count() == 0:
+            users_info = [
+                {
+                    'full_name': 'Trang',
+                    'email': 'trang@pbl5.net',
+                    'birthday': '01/01/2000',
+                    'gender': 'female'
+                }, {
+                    'full_name': 'Huyen',
+                    'email': 'huyen@pbl5.net',
+                    'birthday': '01/01/2000',
+                }, {
+                    'full_name': 'Quynh',
+                    'email': 'quynh@pbl5.net',
+                    'birthday': '01/01/2000',
+                }
+            ]
+
+            student_user_type = User_Types.objects.get(id=1)
+
+            for user_info in users_info:
+                Users.objects.create(
+                    full_name=user_info['full_name'],
+                    email=user_info['email'],
+                    birthday=user_info['birthday'],
+                    user_type=student_user_type
+                )
+
+        #  init_atribute_vectors()
         return Response()

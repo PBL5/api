@@ -1,0 +1,5 @@
+[
+  { "model": "api.subjects", "fields": { "subject_name": "Tri Tue Nhan Tao" } },
+  { "model": "api.subjects", "fields": { "subject_name": "Khoa Hoc Du Lieu" } },
+  { "model": "api.subjects", "fields": { "subject_name": "He phan tan" } }
+]
