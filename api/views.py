@@ -12,10 +12,13 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
 from rest_framework.response import Response
 
+from src.recognize_module.main import init_atribute_vectors, recognize_students_in_image
+
 from .models import Classes, Dates_Class, User_Types, Users
 from .serializer import (AddStudentSerializer, ClassSerializer,
                          LoginSerializer, StudentFilterSerializer,
                          UserSerializer)
+
 
 RASP_API_ENTRY_POINT = 'http://192.168.1.135:8000/rasp/'
 FILE_NAME_LENGTH = 10
@@ -138,10 +141,9 @@ class RecognizeAPIView(generics.CreateAPIView):
         #  img_path = self.save_file()
 
         current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
-        img_path = current_path + '/dataset/test/HQT/5.jpg'
+        img_path = current_path + '/dataset/test/HQT/9.jpg'
 
-        recog_api = test.Recog_Module()
-        recoged_faces = recog_api.Recog_Process(img_path)
+        recoged_faces = recognize_students_in_image(img_path)
 
         # for user_id in recoged_faces:
         #     user_id = int(user_id)
@@ -200,13 +202,11 @@ class AddStudentAPIView(generics.GenericAPIView):
         # for i in range(20):
         #     self.save_file(folder_contain_img_path)
 
-        face_net = RecognizeModule()
-        face_net.export_new_feature(str(user.user_id))
+        #  face_net.export_new_feature(str(user.user_id))
         #  face_net.initialize_all_featute()
-        return Response("thành công!")
+        #  return Response("thành công!")
 
 class InitStudentAPIView(generics.GenericAPIView):
     def get(self, request):
-        recognize_module = RecognizeModule()
-        recognize_module.initialize_all_featute()
+        init_atribute_vectors()
         return Response()

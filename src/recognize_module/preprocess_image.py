@@ -4,9 +4,6 @@ from cv2 import cv2
 from mtcnn import MTCNN
 
 class PreprocessImage:
-    def __init__(self):
-        self.image_path = r"test\\imgTest.jpg"
-
     def main(self, image_path):
         detector = MTCNN()
         image = cv2.cvtColor(cv2.imread(image_path), cv2.COLOR_BGR2RGB)
