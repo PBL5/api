@@ -1,0 +1,15 @@
+[MASTER]
+init-hook='import sys; sys.path.append(".")'
+disable=
+    C0114, # missing-module-docstring
+    C0115, # missing-class-docstring
+    C0116, # missing-function-docstring,
+    R0903, # two-few-public-method
+    django-not-configured,
+    too-many-locals
+load-plugins=
+    pylint_django
+extension-pkg-whitelist=tensorflow
+[TYPECHECK]
+ignored-modules=tensorflow
+ignored-classes=tensorflow
