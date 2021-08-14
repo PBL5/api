@@ -1,4 +1,0 @@
-[
-  { "model": "api.user_types", "fields": { "user_type_name": "Student" } },
-  { "model": "api.user_types", "fields": { "user_type_name": "Teacher" } }
-]

@@ -216,32 +216,35 @@ class AddStudentAPIView(generics.GenericAPIView):
 class InitStudentAPIView(generics.GenericAPIView):
     def get(self, request):
         users: [Users] = Users.objects.all()
-        if users.count() == 0:
+        if users.count() == 2:
             users_info = [
                 {
                     'full_name': 'Trang',
                     'email': 'trang@pbl5.net',
-                    'birthday': '01/01/2000',
+                    'birthday': '2000-01-01',
                     'gender': 'female'
                 }, {
                     'full_name': 'Huyen',
                     'email': 'huyen@pbl5.net',
-                    'birthday': '01/01/2000',
+                    'birthday': '2000-01-01',
+                    'gender': 'female'
                 }, {
                     'full_name': 'Quynh',
                     'email': 'quynh@pbl5.net',
-                    'birthday': '01/01/2000',
+                    'birthday': '2000-01-01',
+                    'gender': 'female'
                 }
             ]
 
-            student_user_type = User_Types.objects.get(id=1)
+            student_user_type = User_Types.objects.get(user_type_id=1)
 
             for user_info in users_info:
                 Users.objects.create(
                     full_name=user_info['full_name'],
                     email=user_info['email'],
                     birthday=user_info['birthday'],
-                    user_type=student_user_type
+                    user_type=student_user_type,
+                    gender=user_info['gender']
                 )
 
         #  init_atribute_vectors()
