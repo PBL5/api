@@ -10,11 +10,12 @@ from django.http import HttpResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
 from src.recognize_module.main import init_atribute_vectors, recognize_students_in_image
 
-from .models import Classes, Dates_Class, User_Types, Users
+from .models import Classes, Dates_Class, Details_Student_Attend_Class, User_Types, Users
 from .serializer import (
     AddStudentSerializer, ClassSerializer, LoginSerializer,
     StudentFilterSerializer, UserSerializer
@@ -238,14 +239,23 @@ class InitStudentAPIView(generics.GenericAPIView):
 
             student_user_type = User_Types.objects.get(user_type_id=1)
 
+            course = Classes.objects.get(subject_id=1)
             for user_info in users_info:
-                Users.objects.create(
-                    full_name=user_info['full_name'],
-                    email=user_info['email'],
-                    birthday=user_info['birthday'],
-                    user_type=student_user_type,
-                    gender=user_info['gender']
-                )
+                try:
+                    Users.objects.get(email=user_info['email'])
+                except Users.DoesNotExist:
+                    student = Users.objects.create(
+                        full_name=user_info['full_name'],
+                        email=user_info['email'],
+                        birthday=user_info['birthday'],
+                        user_type=student_user_type,
+                        gender=user_info['gender']
+                    )
+
+                    Details_Student_Attend_Class.objects.create(
+                        course_id=course.pk,
+                        student_id=student.pk
+                    )
 
         #  init_atribute_vectors()
         return Response()
