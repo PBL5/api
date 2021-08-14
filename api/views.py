@@ -41,11 +41,11 @@ class StudentAPIView(generics.GenericAPIView):
 
             if 'full_name' in filter_options:
                 students = students.filter(
-                    full_name=filter_options['full_name']
+                    full_name__icontains=filter_options['full_name']
                 )
 
             if 'email' in filter_options:
-                students = students.filter(email=filter_options['email'])
+                students = students.filter(email__icontains=filter_options['email'])
 
             if 'student_id' in filter_options:
                 students = students.filter(
