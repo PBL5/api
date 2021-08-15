@@ -1,16 +1,11 @@
 import os
-import random
-import re
-import string
 from datetime import date
 
-import requests
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
-from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
 from src.recognize_module.main import init_atribute_vectors, recognize_students_in_image
@@ -20,9 +15,6 @@ from .serializer import (
     AddStudentSerializer, ClassSerializer, LoginSerializer,
     StudentFilterSerializer, UserSerializer
 )
-
-RASP_API_ENTRY_POINT = 'http://192.168.1.135:8000/rasp/'
-FILE_NAME_LENGTH = 10
 
 
 class StudentAPIView(generics.GenericAPIView):
@@ -45,7 +37,9 @@ class StudentAPIView(generics.GenericAPIView):
                 )
 
             if 'email' in filter_options:
-                students = students.filter(email__icontains=filter_options['email'])
+                students = students.filter(
+                    email__icontains=filter_options['email']
+                )
 
             if 'student_id' in filter_options:
                 students = students.filter(
@@ -112,24 +106,6 @@ class RecognizeAPIView(generics.CreateAPIView):
         'class_id', in_=openapi.IN_QUERY, type=openapi.TYPE_STRING
     )
 
-    #      def save_file(self):
-    #  current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
-    #  response = requests.get(RASP_API_ENTRY_POINT + 'capture')
-
-    #  response_file_name = re.findall(
-    #      'filename=(.+)', response.headers['content-disposition'])[0]
-    #  ext = os.path.splitext(response_file_name)
-
-    #  file_name = ''.join(
-    #      random.choices(string.ascii_lowercase + string.digits,
-    #                     k=FILE_NAME_LENGTH))
-
-    #  img_path = current_path + '/img/' + file_name + ext[1][:-1]
-    #  with open(img_path, 'wb') as f:
-    #      f.write(response.content)
-
-    #          return img_path
-
     @swagger_auto_schema(manual_parameters=[class_id_param])
     def get(self, request, *args, **kwargs):
         # print('start', request.query_params)
@@ -149,6 +125,7 @@ class RecognizeAPIView(generics.CreateAPIView):
         img_path = current_path + '/dataset/test/HQT/9.jpg'
 
         recoged_faces = recognize_students_in_image(img_path)
+        print(recoged_faces)
 
         # for user_id in recoged_faces:
         #     user_id = int(user_id)
@@ -168,20 +145,6 @@ class RecognizeAPIView(generics.CreateAPIView):
 
 
 class AddStudentAPIView(generics.GenericAPIView):
-    #   def save_file(self, folder_contain_img_path):
-    #  response = requests.get(RASP_API_ENTRY_POINT + 'capture')
-
-    #  response_file_name = re.findall(
-    #      'filename=(.+)', response.headers['content-disposition'])[0]
-    #  ext = os.path.splitext(response_file_name)
-
-    #  file_name = ''.join(
-    #      random.choices(string.ascii_uppercase + string.digits,
-    #                     k=FILE_NAME_LENGTH))
-    #  img_path = folder_contain_img_path + file_name + ext[1][:-1]
-    #  with open(img_path, 'wb') as f:
-    #           f.write(response.content)
-
     @swagger_auto_schema(request_body=AddStudentSerializer)
     def post(self, request):
         #  Comment following 23 lines if you want to create trained file with the existing dataset
@@ -216,46 +179,42 @@ class AddStudentAPIView(generics.GenericAPIView):
 
 class InitStudentAPIView(generics.GenericAPIView):
     def get(self, request):
-        users: [Users] = Users.objects.all()
-        if users.count() == 2:
-            users_info = [
-                {
-                    'full_name': 'Trang',
-                    'email': 'trang@pbl5.net',
-                    'birthday': '2000-01-01',
-                    'gender': 'female'
-                }, {
-                    'full_name': 'Huyen',
-                    'email': 'huyen@pbl5.net',
-                    'birthday': '2000-01-01',
-                    'gender': 'female'
-                }, {
-                    'full_name': 'Quynh',
-                    'email': 'quynh@pbl5.net',
-                    'birthday': '2000-01-01',
-                    'gender': 'female'
-                }
-            ]
+        users_info: [dict] = [
+            {
+                'full_name': 'Trang',
+                'email': 'trang@pbl5.net',
+                'birthday': '2000-01-01',
+                'gender': 'female'
+            }, {
+                'full_name': 'Huyen',
+                'email': 'huyen@pbl5.net',
+                'birthday': '2000-01-01',
+                'gender': 'female'
+            }, {
+                'full_name': 'Quynh',
+                'email': 'quynh@pbl5.net',
+                'birthday': '2000-01-01',
+                'gender': 'female'
+            }
+        ]
 
-            student_user_type = User_Types.objects.get(user_type_id=1)
+        student_user_type: User_Types = User_Types.objects.get(user_type_id=1)
+        course: Classes = Classes.objects.get(subject_id=1)
+        for user_info in users_info:
+            try:
+                Users.objects.get(email=user_info['email'])
+            except Users.DoesNotExist:
+                student: Users = Users.objects.create(
+                    full_name=user_info['full_name'],
+                    email=user_info['email'],
+                    birthday=user_info['birthday'],
+                    user_type=student_user_type,
+                    gender=user_info['gender']
+                )
 
-            course = Classes.objects.get(subject_id=1)
-            for user_info in users_info:
-                try:
-                    Users.objects.get(email=user_info['email'])
-                except Users.DoesNotExist:
-                    student = Users.objects.create(
-                        full_name=user_info['full_name'],
-                        email=user_info['email'],
-                        birthday=user_info['birthday'],
-                        user_type=student_user_type,
-                        gender=user_info['gender']
-                    )
+                Details_Student_Attend_Class.objects.create(
+                    course_id=course.pk, student_id=student.pk
+                )
 
-                    Details_Student_Attend_Class.objects.create(
-                        course_id=course.pk,
-                        student_id=student.pk
-                    )
-
-        init_atribute_vectors()
+        #  init_atribute_vectors()
         return Response()
