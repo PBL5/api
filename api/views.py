@@ -216,5 +216,5 @@ class InitStudentAPIView(generics.GenericAPIView):
                     course_id=course.pk, student_id=student.pk
                 )
 
-        #  init_atribute_vectors()
+        init_atribute_vectors()
         return Response()
