@@ -172,6 +172,7 @@ class AddStudentAPIView(generics.GenericAPIView):
         ) + '/'
         os.mkdir(folder_contain_img_path)
 
+        # Get image from rasp 
         for i in range(20):
             get_image_from_rasp(folder_contain_img_path)
 
