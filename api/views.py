@@ -172,7 +172,7 @@ class AddStudentAPIView(generics.GenericAPIView):
         ) + '/'
         os.mkdir(folder_contain_img_path)
 
-        # Get image from rasp 
+        # Get image from rasp
         for i in range(20):
             get_image_from_rasp(folder_contain_img_path)
 
@@ -226,6 +226,13 @@ class InitStudentAPIView(generics.GenericAPIView):
         init_atribute_vectors()
         return Response()
 
+
 class AddStudentToClassAPIView(generics.GenericAPIView):
     def post(self, request):
+        class_id: int = request.data['class_id']
+        student_id: int = request.data['student_id']
+
+        Details_Student_Attend_Class.objects.create(
+            course_id=class_id, student_id=student_id
+        )
         return Response()
