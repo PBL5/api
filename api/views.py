@@ -211,7 +211,7 @@ class InitStudentAPIView(generics.GenericAPIView):
                 Users.objects.get(email=user_info['email'])
             except Users.DoesNotExist:
                 student: Users = Users.objects.create(
-                    user_id=user_info['user_id']
+                    user_id=user_info['user_id'],
                     full_name=user_info['full_name'],
                     email=user_info['email'],
                     birthday=user_info['birthday'],
