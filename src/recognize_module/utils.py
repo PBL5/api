@@ -2,14 +2,14 @@ import os
 
 from cv2 import cv2
 from mtcnn import MTCNN
-from global_config import PROCESSED_IMAGE_DIR
+from global_config import PROCESSED_IMAGE_DIR_SUFFIX
 
 
 def crop_and_save(raw_path, name):
     images = []
     dem = 0
     current_path = str(os.path.abspath(os.getcwd()))  # .../pbl5-api
-    newpath = current_path + PROCESSED_IMAGE_DIR + "/" + name
+    newpath = current_path + PROCESSED_IMAGE_DIR_SUFFIX + "/" + name
     if not os.path.exists(newpath):
         os.makedirs(newpath)
 

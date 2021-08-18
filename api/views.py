@@ -9,8 +9,12 @@ from rest_framework import generics
 from rest_framework.response import Response
 
 from src.recognize_module.main import init_atribute_vectors, recognize_students_in_image
+from src.utils.get_image_from_rasp import get_image_from_rasp
 
-from .models import Classes, Dates_Class, Details_Student_Attend_Class, User_Types, Users
+from .models import (
+    Classes, Dates_Class, Details_Student_Attend_Class, StudentAttending,
+    User_Types, Users
+)
 from .serializer import (
     AddStudentSerializer, ClassSerializer, LoginSerializer,
     StudentFilterSerializer, UserSerializer
@@ -108,39 +112,39 @@ class RecognizeAPIView(generics.CreateAPIView):
 
     @swagger_auto_schema(manual_parameters=[class_id_param])
     def get(self, request, *args, **kwargs):
-        # print('start', request.query_params)
-        # class_id = request.query_params['class_id']
+        class_id: int = int(request.query_params['class_id'])
 
-        # today = date.today()
-        # course = Classes.objects.get(pk=class_id)
-        # date_class = {}
-        # try:
-        #     date_class = Dates_Class.objects.get(date=today, course=course)
-        # except Dates_Class.DoesNotExist:
-        #     date_class = Dates_Class.objects.create(date=today, course=course)
+        today: date = date.today()
+        course: Classes = Classes.objects.get(pk=class_id)
+        date_class: Dates_Class = {}
 
-        #  img_path = self.save_file()
+        try:
+            date_class = Dates_Class.objects.get(date=today, course=course)
+        except Dates_Class.DoesNotExist:
+            date_class = Dates_Class.objects.create(date=today, course=course)
 
-        current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
-        img_path = current_path + '/dataset/test/HQT/9.jpg'
+        #  img_contain_dir = str(os.path.abspath(os.getcwd())) + '/img/'
+        #  img_path = get_image_from_rasp(img_contain_dir)
 
-        recoged_faces = recognize_students_in_image(img_path)
-        print(recoged_faces)
+        current_path: str = str(os.path.abspath(os.getcwd()))  # .../pbl5-api
+        img_path: str = current_path + '/dataset/test/HQT/9.jpg'
 
-        # for user_id in recoged_faces:
-        #     user_id = int(user_id)
-        #     student = Users.objects.get(pk=user_id)
+        recognized_face_ids: [int] = recognize_students_in_image(img_path)
+        print(recognized_face_ids)
 
-        #     exist_attendances = StudentAttending.objects.filter(
-        #         student__pk=user_id, dateClass__pk=date_class.id).count()
+        for user_id in recognized_face_ids:
+            student: Users = Users.objects.get(pk=user_id)
 
-        #     if exist_attendances == 0:
-        #         print(user_id, 'not exist')
-        #         StudentAttending.objects.create(isAttending=True,
-        #                                         dateClass=date_class,
-        #                                         student=student)
+            exist_attendances: StudentAttending = StudentAttending.objects.filter(
+                student__pk=user_id, dateClass__pk=date_class.id
+            ).count()
 
-        print(recoged_faces)
+            if exist_attendances == 0:
+                print(user_id, 'not exist')
+                StudentAttending.objects.create(
+                    isAttending=True, dateClass=date_class, student=student
+                )
+
         return Response()
 
 
@@ -162,19 +166,17 @@ class AddStudentAPIView(generics.GenericAPIView):
             user_type=student_user_type
         )
 
-        # current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
-        # length = len(current_path)
-        # current_path = current_path[:length - 6]
-        # folder_contain_img_path = current_path + '/Dataset/FaceData/raw/' + str(
-        #     user.user_id) + '/'
-        # os.mkdir(folder_contain_img_path)
+        current_path = str(os.path.abspath(os.getcwd()))  # .../pbl5-api
+        folder_contain_img_path = current_path + '/dataset/raw/' + str(
+            user.user_id
+        ) + '/'
+        os.mkdir(folder_contain_img_path)
 
-        # for i in range(20):
-        #     self.save_file(folder_contain_img_path)
+        for i in range(20):
+            get_image_from_rasp(folder_contain_img_path)
 
-        #  face_net.export_new_feature(str(user.user_id))
-        #  face_net.initialize_all_featute()
-        #  return Response('thành công!')
+        init_atribute_vectors()
+        return Response('thành công!')
 
 
 class InitStudentAPIView(generics.GenericAPIView):
@@ -217,4 +219,8 @@ class InitStudentAPIView(generics.GenericAPIView):
                 )
 
         init_atribute_vectors()
+        return Response()
+
+class AddStudentToClassAPIView(generics.GenericAPIView):
+    def post(self, request):
         return Response()

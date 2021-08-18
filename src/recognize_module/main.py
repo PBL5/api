@@ -3,7 +3,7 @@
 from array import array
 import os
 
-from global_config import RAW_IMAGE_DIR
+from global_config import PROCESSED_IMAGE_DIR_SUFFIX, RAW_IMAGE_DIR_SUFFIX
 
 from src.recognize_module.detect import get_cropped_images
 from src.recognize_module.utils import crop_and_save
@@ -30,13 +30,15 @@ def init_atribute_vectors():
 
     current_path = str(os.path.abspath(os.getcwd()))  # pbl5-api
 
-    folder = current_path + RAW_IMAGE_DIR
+    raw_image_dir = current_path + RAW_IMAGE_DIR_SUFFIX
+    processed_image_dir = current_path + PROCESSED_IMAGE_DIR_SUFFIX
     sub_folders = [
-        name for name in os.listdir(folder)
-        if os.path.isdir(os.path.join(folder, name))
+        name for name in os.listdir(raw_image_dir)
+        if os.path.isdir(os.path.join(raw_image_dir, name))
     ]
 
     for sub_folder in sub_folders:
-        raw_path = folder + "/" + sub_folder
+        raw_path = raw_image_dir + "/" + sub_folder
+        processed_path = processed_image_dir + "/" + sub_folder
         crop_and_save(raw_path, sub_folder)
-        save_feature_vectors()
+    save_feature_vectors()

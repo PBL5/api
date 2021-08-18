@@ -9,7 +9,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 import tensorflow.compat.v1 as tf
 from cv2 import cv2
 
-from global_config import PRETRAINED_MODEL_DIR, PROCESSED_IMAGE_DIR
+from global_config import PRETRAINED_MODEL_DIR_SUFFIX, PROCESSED_IMAGE_DIR_SUFFIX
 from src.recognize_module.libs import facenet, converter
 
 
@@ -19,7 +19,7 @@ def get_recognized_person_info(cropped, image_index):
     # Cai dat cac tham so can thiet
     input_image_size = 160
     current_path = str(os.path.abspath(os.getcwd()))  # .../pbl5-api
-    facenet_model_path = current_path + PRETRAINED_MODEL_DIR
+    facenet_model_path = current_path + PRETRAINED_MODEL_DIR_SUFFIX
 
     with tf.Graph().as_default():
 
@@ -71,7 +71,7 @@ def get_recognized_person_info(cropped, image_index):
                     label = labels[0][0]
 
                     p = paths[label]
-                    processed_path = current_path + PROCESSED_IMAGE_DIR + "/"
+                    processed_path = current_path + PROCESSED_IMAGE_DIR_SUFFIX + "/"
                     p = p[len(processed_path):]
 
                     str_arr = p.split('/')
@@ -107,9 +107,9 @@ def save_feature_vectors():
     # TODO: save to database instead binary
     # Get image, extract feature and save to binary
 
-    current_path = str(os.path.abspath(os.getcwd()))  # .../AISrc
-    facenet_model_path = current_path + PRETRAINED_MODEL_DIR
-    processed_path = current_path + PROCESSED_IMAGE_DIR
+    current_path = str(os.path.abspath(os.getcwd()))  # .../pbl5-api
+    facenet_model_path = current_path + PRETRAINED_MODEL_DIR_SUFFIX
+    processed_path = current_path + PROCESSED_IMAGE_DIR_SUFFIX
 
     with tf.Graph().as_default():
         # Cai dat GPU neu co
@@ -135,6 +135,7 @@ def save_feature_vectors():
             nrof_images = len(paths)
             nrof_batches_per_epoch = int(math.ceil(1.0 * nrof_images / 1000))
             emb_arrays = np.zeros((nrof_images, embedding_size))
+            print(paths)
             for i in range(nrof_batches_per_epoch):
                 start_index = i * 1000
                 end_index = min((i + 1) * 1000, nrof_images)
@@ -145,9 +146,18 @@ def save_feature_vectors():
                     phase_train_placeholder: False
                 }
                 # trả về danh sách embedded vectors
-                emb_arrays[start_index:end_index, :] = sess.run(
+                embedded_vector = sess.run(
                     embeddings, feed_dict=feed_dict
                 )
+                print(i)
+                print(start_index)
+                print(end_index)
+                print(embedded_vector)
+                emb_arrays[start_index:end_index, :] = embedded_vector
+
+        print(emb_arrays)
+        print(emb_arrays.shape)
+        print(len(emb_arrays))
         save(current_path + '/results/data.npy', emb_arrays)
         save(current_path + '/results/paths.npy', paths)
         save(current_path + '/results/labels.npy', labels)
