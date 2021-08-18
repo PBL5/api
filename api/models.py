@@ -23,6 +23,7 @@ class Users(models.Model):
     )
     gender = models.CharField(max_length=10, null=True)
     birthday = models.DateField(null=True)
+    face_vectors = models.CharField(null=True)
 
     def __str__(self):
         return str(self.user_id)
