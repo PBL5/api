@@ -184,16 +184,19 @@ class InitStudentAPIView(generics.GenericAPIView):
     def get(self, request):
         users_info: [dict] = [
             {
+                'user_id': 10,
                 'full_name': 'Trang',
                 'email': 'trang@pbl5.net',
                 'birthday': '2000-01-01',
                 'gender': 'female'
             }, {
+                'user_id': 11,
                 'full_name': 'Huyen',
                 'email': 'huyen@pbl5.net',
                 'birthday': '2000-01-01',
                 'gender': 'female'
             }, {
+                'user_id': 12,
                 'full_name': 'Quynh',
                 'email': 'quynh@pbl5.net',
                 'birthday': '2000-01-01',
@@ -208,6 +211,7 @@ class InitStudentAPIView(generics.GenericAPIView):
                 Users.objects.get(email=user_info['email'])
             except Users.DoesNotExist:
                 student: Users = Users.objects.create(
+                    user_id=user_info['user_id']
                     full_name=user_info['full_name'],
                     email=user_info['email'],
                     birthday=user_info['birthday'],
