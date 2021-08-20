@@ -1,0 +1,10 @@
+version: '3'
+services:
+  database:
+    image: 'postgres'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Mobile@final
+      - POSTGRES_DB=pbl5
+    ports:
+      - "5432:5432"

@@ -87,7 +87,7 @@ DATABASES = {
         'NAME': 'pbl5',
         'USER': 'postgres',
         'PASSWORD': 'Mobile@final',
-        'HOST': '54.255.2.253',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }

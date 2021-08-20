@@ -123,27 +123,33 @@ class RecognizeAPIView(generics.CreateAPIView):
         except Dates_Class.DoesNotExist:
             date_class = Dates_Class.objects.create(date=today, course=course)
 
-        #  img_contain_dir = str(os.path.abspath(os.getcwd())) + '/img/'
-        #  img_path = get_image_from_rasp(img_contain_dir)
 
-        current_path: str = str(os.path.abspath(os.getcwd()))  # .../pbl5-api
-        img_path: str = current_path + '/dataset/test/HQT/9.jpg'
 
-        recognized_face_ids: [int] = recognize_students_in_image(img_path)
-        print(recognized_face_ids)
+        for i in range(4):
+            # Get image from rasp
+            img_contain_dir = str(os.path.abspath(os.getcwd())) + '/img/'
+            img_path = get_image_from_rasp(img_contain_dir)
 
-        for user_id in recognized_face_ids:
-            student: Users = Users.objects.get(pk=user_id)
+#          current_path: str = str(os.path.abspath(os.getcwd()))  # .../pbl5-api
+#          img_path: str = current_path + '/dataset/test/HQT/9.jpg'
 
-            exist_attendances: StudentAttending = StudentAttending.objects.filter(
-                student__pk=user_id, dateClass__pk=date_class.id
-            ).count()
+            # Recognize and get ids
+            recognized_face_ids: [int] = recognize_students_in_image(img_path)
+            print(recognized_face_ids)
 
-            if exist_attendances == 0:
-                print(user_id, 'not exist')
-                StudentAttending.objects.create(
-                    isAttending=True, dateClass=date_class, student=student
-                )
+            # Update to database
+            for user_id in recognized_face_ids:
+                student: Users = Users.objects.get(pk=user_id)
+
+                exist_attendances: StudentAttending = StudentAttending.objects.filter(
+                    student__pk=user_id, dateClass__pk=date_class.id
+                ).count()
+
+                if exist_attendances == 0:
+                    print(user_id, 'not exist')
+                    StudentAttending.objects.create(
+                        isAttending=True, dateClass=date_class, student=student
+                    )
 
         return Response()
 
@@ -177,7 +183,7 @@ class AddStudentAPIView(generics.GenericAPIView):
             get_image_from_rasp(folder_contain_img_path)
 
         init_atribute_vectors()
-        return Response('thành công!')
+        return Response(user.pk)
 
 
 class InitStudentAPIView(generics.GenericAPIView):
@@ -231,6 +237,7 @@ class AddStudentToClassAPIView(generics.GenericAPIView):
     def post(self, request):
         class_id: int = request.data['class_id']
         student_id: int = request.data['student_id']
+        print(student_id)
 
         Details_Student_Attend_Class.objects.create(
             course_id=class_id, student_id=student_id

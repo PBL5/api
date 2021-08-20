@@ -166,3 +166,5 @@ Thumbs.db
 test/
 cropped/
 .vscode
+
+/img
